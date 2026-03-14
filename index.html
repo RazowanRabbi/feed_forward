@@ -1,11 +1,754 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FeedForward | Share Food, Support Communities</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tailwind Custom Theme -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                50: "#f0fdf4",
+                100: "#dcfce7",
+                500: "#22c55e",
+                600: "#16a34a",
+                700: "#15803d",
+                900: "#14532d",
+              },
+            },
+            boxShadow: {
+              soft: "0 10px 30px rgba(15, 23, 42, 0.08)",
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body class="bg-slate-50 text-slate-800">
+    <!-- Navbar -->
+    <header
+      class="sticky top-0 z-50 border-b border-slate-200/70 bg-white/80 backdrop-blur-md"
+    >
+      <div
+        class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8"
+      >
+        <a href="index.html" class="flex items-center gap-3">
+          <div
+            class="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-600 text-lg font-bold text-white shadow-soft"
+          >
+            F
+          </div>
+          <div>
+            <h1 class="text-lg font-bold tracking-tight text-slate-900">
+              FeedForward
+            </h1>
+            <p class="text-xs text-slate-500">
+              Reduce waste. Feed communities.
+            </p>
+          </div>
+        </a>
+
+        <nav class="hidden items-center gap-8 md:flex">
+          <a
+            href="#home"
+            class="text-sm font-medium text-slate-600 transition hover:text-brand-700"
+            >Home</a
+          >
+          <a
+            href="#how-it-works"
+            class="text-sm font-medium text-slate-600 transition hover:text-brand-700"
+            >How It Works</a
+          >
+          <a
+            href="#features"
+            class="text-sm font-medium text-slate-600 transition hover:text-brand-700"
+            >Features</a
+          >
+          <a
+            href="#impact"
+            class="text-sm font-medium text-slate-600 transition hover:text-brand-700"
+            >Impact</a
+          >
+        </nav>
+
+        <div class="hidden items-center gap-3 md:flex">
+          <a
+            href="login.html"
+            class="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-brand-600 hover:text-brand-700"
+          >
+            Login
+          </a>
+          <a
+            href="register.html"
+            class="rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-soft transition hover:bg-brand-700"
+          >
+            Get Started
+          </a>
+        </div>
+
+        <button
+          id="menuBtn"
+          class="rounded-lg border border-slate-300 p-2 md:hidden"
+          aria-label="Open Menu"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 text-slate-700"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div
+        id="mobileMenu"
+        class="hidden border-t border-slate-200 bg-white md:hidden"
+      >
+        <div class="space-y-3 px-6 py-4">
+          <a href="#home" class="block text-sm font-medium text-slate-700"
+            >Home</a
+          >
+          <a
+            href="#how-it-works"
+            class="block text-sm font-medium text-slate-700"
+            >How It Works</a
+          >
+          <a href="#features" class="block text-sm font-medium text-slate-700"
+            >Features</a
+          >
+          <a href="#impact" class="block text-sm font-medium text-slate-700"
+            >Impact</a
+          >
+
+          <div class="flex gap-3 pt-2">
+            <a
+              href="login.html"
+              class="w-full rounded-xl border border-slate-300 px-4 py-2 text-center text-sm font-semibold text-slate-700"
+            >
+              Login
+            </a>
+            <a
+              href="register.html"
+              class="w-full rounded-xl bg-brand-600 px-4 py-2 text-center text-sm font-semibold text-white"
+            >
+              Register
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative overflow-hidden">
+      <div
+        class="absolute inset-0 bg-gradient-to-br from-brand-50 via-white to-emerald-100"
+      ></div>
+      <div class="absolute inset-0 grid-bg opacity-60"></div>
+
+      <div
+        class="relative mx-auto grid max-w-7xl items-center gap-14 px-6 py-20 lg:grid-cols-2 lg:px-8 lg:py-28"
+      >
+        <div>
+          <span
+            class="fade-up inline-flex items-center rounded-full border border-brand-200 bg-white px-4 py-2 text-sm font-semibold text-brand-700 shadow-sm"
+          >
+            Smarter food redistribution for modern communities
+          </span>
+
+          <h2
+            class="fade-up fade-up-delay-1 mt-6 max-w-2xl text-4xl font-bold leading-tight tracking-tight text-slate-900 sm:text-5xl lg:text-6xl"
+          >
+            Turn surplus food into
+            <span class="text-brand-600">real community impact</span>
+          </h2>
+
+          <p
+            class="fade-up fade-up-delay-2 mt-6 max-w-xl text-lg leading-8 text-slate-600"
+          >
+            FeedForward is a food redistribution platform that helps donors
+            share surplus food, enables receivers to access support faster, and
+            empowers volunteers to contribute to meaningful community impact.
+          </p>
+
+          <div
+            class="fade-up fade-up-delay-3 mt-8 flex flex-col gap-4 sm:flex-row"
+          >
+            <a
+              href="register.html"
+              class="rounded-2xl bg-brand-600 px-6 py-3 text-center text-sm font-semibold text-white shadow-soft transition hover:bg-brand-700"
+            >
+              Start Sharing Food
+            </a>
+            <a
+              href="#features"
+              class="rounded-2xl border border-slate-300 bg-white px-6 py-3 text-center text-sm font-semibold text-slate-700 transition hover:border-brand-600 hover:text-brand-700"
+            >
+              Explore Features
+            </a>
+          </div>
+
+          <div class="mt-10 grid max-w-lg grid-cols-3 gap-4">
+            <div
+              class="rounded-2xl border border-white/80 bg-white/80 p-4 shadow-soft backdrop-blur"
+            >
+              <h3 class="text-2xl font-bold text-slate-900">500+</h3>
+              <p class="mt-1 text-sm text-slate-500">Meals rescued</p>
+            </div>
+            <div
+              class="rounded-2xl border border-white/80 bg-white/80 p-4 shadow-soft backdrop-blur"
+            >
+              <h3 class="text-2xl font-bold text-slate-900">120+</h3>
+              <p class="mt-1 text-sm text-slate-500">Active donors</p>
+            </div>
+            <div
+              class="rounded-2xl border border-white/80 bg-white/80 p-4 shadow-soft backdrop-blur"
+            >
+              <h3 class="text-2xl font-bold text-slate-900">40+</h3>
+              <p class="mt-1 text-sm text-slate-500">Volunteer pickups</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative">
+          <div
+            class="float-soft mx-auto max-w-xl rounded-[32px] border border-white/70 bg-white/85 p-5 shadow-soft backdrop-blur"
+          >
+            <div class="rounded-[28px] bg-slate-900 p-5 text-white">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-slate-300">Platform Overview</p>
+                  <h3 class="mt-1 text-2xl font-semibold">
+                    Community impact snapshot
+                  </h3>
+                </div>
+                <span
+                  class="rounded-full bg-brand-500/20 px-3 py-1 text-xs font-semibold text-green-300"
+                >
+                  Public View
+                </span>
+              </div>
+
+              <div class="mt-6 grid gap-4 sm:grid-cols-2">
+                <div class="rounded-2xl bg-white/10 p-4">
+                  <p class="text-sm text-slate-300">Meals redirected</p>
+                  <h4 class="mt-2 text-3xl font-bold">1,240+</h4>
+                </div>
+                <div class="rounded-2xl bg-white/10 p-4">
+                  <p class="text-sm text-slate-300">Registered donors</p>
+                  <h4 class="mt-2 text-3xl font-bold">320+</h4>
+                </div>
+                <div class="rounded-2xl bg-white/10 p-4">
+                  <p class="text-sm text-slate-300">Community partners</p>
+                  <h4 class="mt-2 text-3xl font-bold">85+</h4>
+                </div>
+                <div class="rounded-2xl bg-white/10 p-4">
+                  <p class="text-sm text-slate-300">Successful deliveries</p>
+                  <h4 class="mt-2 text-3xl font-bold">540+</h4>
+                </div>
+              </div>
+
+              <div class="mt-6 rounded-2xl bg-white/10 p-4">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="text-sm text-slate-300">Our mission</p>
+                    <h5 class="mt-1 text-lg font-semibold">
+                      Connecting surplus with need
+                    </h5>
+                  </div>
+                  <span
+                    class="rounded-full bg-emerald-400/20 px-3 py-1 text-xs font-semibold text-emerald-300"
+                  >
+                    Ongoing
+                  </span>
+                </div>
+                <p class="mt-3 text-sm leading-6 text-slate-300">
+                  FeedForward helps donors, receivers, and volunteers work
+                  together through one coordinated platform that reduces food
+                  waste and increases access to support.
+                </p>
+              </div>
+            </div>
+
+            <div class="mt-4 grid gap-4 sm:grid-cols-3">
+              <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                <p class="text-sm text-slate-500">For donors</p>
+                <h4 class="mt-1 font-semibold text-slate-900">
+                  List surplus food
+                </h4>
+                <p class="mt-1 text-sm text-slate-500">
+                  Share extra food before it goes to waste.
+                </p>
+              </div>
+              <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                <p class="text-sm text-slate-500">For receivers</p>
+                <h4 class="mt-1 font-semibold text-slate-900">
+                  Find available support
+                </h4>
+                <p class="mt-1 text-sm text-slate-500">
+                  Browse food donations that match your needs.
+                </p>
+              </div>
+              <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                <p class="text-sm text-slate-500">For volunteers</p>
+                <h4 class="mt-1 font-semibold text-slate-900">
+                  Help with delivery
+                </h4>
+                <p class="mt-1 text-sm text-slate-500">
+                  Make redistribution faster through local action.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trust Section -->
+    <section class="border-y border-slate-200 bg-white">
+      <div
+        class="mx-auto grid max-w-7xl gap-6 px-6 py-8 text-center sm:grid-cols-2 lg:grid-cols-4 lg:px-8"
+      >
+        <div>
+          <p class="text-3xl font-bold text-slate-900">Transparent</p>
+          <p class="mt-2 text-sm text-slate-500">
+            Clear roles and coordinated food redistribution flow
+          </p>
+        </div>
+        <div>
+          <p class="text-3xl font-bold text-slate-900">Accessible</p>
+          <p class="mt-2 text-sm text-slate-500">
+            Built for donors, receivers, and community volunteers
+          </p>
+        </div>
+        <div>
+          <p class="text-3xl font-bold text-slate-900">Efficient</p>
+          <p class="mt-2 text-sm text-slate-500">
+            Reduces delay between available food and community need
+          </p>
+        </div>
+        <div>
+          <p class="text-3xl font-bold text-slate-900">Impactful</p>
+          <p class="mt-2 text-sm text-slate-500">
+            Supports real food recovery and local social good
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="mx-auto max-w-7xl px-6 py-20 lg:px-8">
+      <div class="max-w-2xl">
+        <p
+          class="text-sm font-semibold uppercase tracking-[0.2em] text-brand-600"
+        >
+          How it works
+        </p>
+        <h2
+          class="mt-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl"
+        >
+          A simple flow designed for speed and coordination
+        </h2>
+        <p class="mt-4 text-lg leading-8 text-slate-600">
+          FeedForward makes food donation easier by connecting the right people
+          at the right time.
+        </p>
+      </div>
+
+      <div class="mt-12 grid gap-6 md:grid-cols-3">
+        <div
+          class="rounded-3xl border border-slate-200 bg-white p-8 shadow-soft transition duration-300 hover:-translate-y-1 hover:border-brand-200"
+        >
+          <div
+            class="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-100 text-xl font-bold text-brand-700"
+          >
+            01
+          </div>
+          <h3 class="mt-6 text-xl font-semibold text-slate-900">
+            Donors list surplus food
+          </h3>
+          <p class="mt-3 leading-7 text-slate-600">
+            Restaurants, households, or events can quickly add available food
+            with quantity, location, and expiry details.
+          </p>
+        </div>
+
+        <div
+          class="rounded-3xl border border-slate-200 bg-white p-8 shadow-soft transition duration-300 hover:-translate-y-1 hover:border-brand-200"
+        >
+          <div
+            class="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-100 text-xl font-bold text-amber-700"
+          >
+            02
+          </div>
+          <h3 class="mt-6 text-xl font-semibold text-slate-900">
+            Receivers request what they need
+          </h3>
+          <p class="mt-3 leading-7 text-slate-600">
+            NGOs, shelters, and communities can browse available donations and
+            claim food that fits their needs.
+          </p>
+        </div>
+
+        <div
+          class="rounded-3xl border border-slate-200 bg-white p-8 shadow-soft transition duration-300 hover:-translate-y-1 hover:border-brand-200"
+        >
+          <div
+            class="flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-100 text-xl font-bold text-sky-700"
+          >
+            03
+          </div>
+          <h3 class="mt-6 text-xl font-semibold text-slate-900">
+            Volunteers complete deliveries
+          </h3>
+          <p class="mt-3 leading-7 text-slate-600">
+            Nearby volunteers can accept pickup tasks, coordinate delivery, and
+            keep the whole process moving smoothly.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="bg-white py-20">
+      <div class="mx-auto max-w-7xl px-6 lg:px-8">
+        <div class="max-w-2xl">
+          <p
+            class="text-sm font-semibold uppercase tracking-[0.2em] text-brand-600"
+          >
+            Core features
+          </p>
+          <h2
+            class="mt-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl"
+          >
+            Everything important in one coordinated platform
+          </h2>
+        </div>
+
+        <div class="mt-12 grid gap-6 lg:grid-cols-3">
+          <div
+            class="rounded-3xl border border-slate-200 bg-slate-50 p-8 transition hover:shadow-soft"
+          >
+            <h3 class="text-xl font-semibold text-slate-900">
+              Real-time food listings
+            </h3>
+            <p class="mt-3 leading-7 text-slate-600">
+              Quickly publish available food so nearby receivers can see
+              opportunities without delay.
+            </p>
+          </div>
+
+          <div
+            class="rounded-3xl border border-slate-200 bg-slate-50 p-8 transition hover:shadow-soft"
+          >
+            <h3 class="text-xl font-semibold text-slate-900">
+              Smart matching logic
+            </h3>
+            <p class="mt-3 leading-7 text-slate-600">
+              Prioritize matches based on urgency, location, quantity, and
+              delivery feasibility.
+            </p>
+          </div>
+
+          <div
+            class="rounded-3xl border border-slate-200 bg-slate-50 p-8 transition hover:shadow-soft"
+          >
+            <h3 class="text-xl font-semibold text-slate-900">
+              Expiry-aware system
+            </h3>
+            <p class="mt-3 leading-7 text-slate-600">
+              Prevent waste and reduce risk by automatically handling expiring
+              or unavailable items.
+            </p>
+          </div>
+
+          <div
+            class="rounded-3xl border border-slate-200 bg-slate-50 p-8 transition hover:shadow-soft"
+          >
+            <h3 class="text-xl font-semibold text-slate-900">
+              Volunteer coordination
+            </h3>
+            <p class="mt-3 leading-7 text-slate-600">
+              Assign pickup and delivery tasks to volunteers for smoother
+              logistics and faster redistribution.
+            </p>
+          </div>
+
+          <div
+            class="rounded-3xl border border-slate-200 bg-slate-50 p-8 transition hover:shadow-soft"
+          >
+            <h3 class="text-xl font-semibold text-slate-900">
+              Impact analytics
+            </h3>
+            <p class="mt-3 leading-7 text-slate-600">
+              Track meals saved, donations completed, active users, and the
+              overall value created.
+            </p>
+          </div>
+
+          <div
+            class="rounded-3xl border border-slate-200 bg-slate-50 p-8 transition hover:shadow-soft"
+          >
+            <h3 class="text-xl font-semibold text-slate-900">
+              Community-first experience
+            </h3>
+            <p class="mt-3 leading-7 text-slate-600">
+              Build trust through organized workflows, clear status updates, and
+              meaningful contribution visibility.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Impact -->
+    <section id="impact" class="mx-auto max-w-7xl px-6 py-20 lg:px-8">
+      <div class="grid items-center gap-12 lg:grid-cols-2">
+        <div>
+          <p
+            class="text-sm font-semibold uppercase tracking-[0.2em] text-brand-600"
+          >
+            Why it matters
+          </p>
+          <h2
+            class="mt-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl"
+          >
+            A digital bridge between excess and need
+          </h2>
+          <p class="mt-5 text-lg leading-8 text-slate-600">
+            FeedForward is more than a donation platform. It is a coordinated
+            response to food waste, social inequality, and inefficient
+            distribution.
+          </p>
+
+          <div class="mt-8 space-y-5">
+            <div
+              class="rounded-2xl border border-slate-200 bg-white p-5 shadow-soft"
+            >
+              <h3 class="font-semibold text-slate-900">
+                Less waste, more value
+              </h3>
+              <p class="mt-2 text-slate-600">
+                Surplus food becomes a useful resource instead of being
+                discarded.
+              </p>
+            </div>
+            <div
+              class="rounded-2xl border border-slate-200 bg-white p-5 shadow-soft"
+            >
+              <h3 class="font-semibold text-slate-900">
+                Faster help for receivers
+              </h3>
+              <p class="mt-2 text-slate-600">
+                Shelters and communities can find nearby food support with
+                better timing and visibility.
+              </p>
+            </div>
+            <div
+              class="rounded-2xl border border-slate-200 bg-white p-5 shadow-soft"
+            >
+              <h3 class="font-semibold text-slate-900">
+                Meaningful volunteer contribution
+              </h3>
+              <p class="mt-2 text-slate-600">
+                Volunteers become a key operational part of the food
+                redistribution cycle.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="rounded-[32px] bg-gradient-to-br from-slate-900 to-slate-800 p-8 text-white shadow-soft"
+        >
+          <p class="text-sm text-slate-300">Projected platform value</p>
+          <h3 class="mt-2 text-3xl font-bold">
+            Built for measurable social impact
+          </h3>
+
+          <div class="mt-8 grid gap-5 sm:grid-cols-2">
+            <div class="rounded-2xl bg-white/10 p-5">
+              <p class="text-sm text-slate-300">Food saved</p>
+              <h4 class="mt-2 text-3xl font-bold">1.2T+</h4>
+              <p class="mt-2 text-sm text-slate-300">
+                Potential reduction in preventable waste through coordination
+              </p>
+            </div>
+            <div class="rounded-2xl bg-white/10 p-5">
+              <p class="text-sm text-slate-300">Access improved</p>
+              <h4 class="mt-2 text-3xl font-bold">24/7</h4>
+              <p class="mt-2 text-sm text-slate-300">
+                Visibility for food availability and requests
+              </p>
+            </div>
+            <div class="rounded-2xl bg-white/10 p-5">
+              <p class="text-sm text-slate-300">System clarity</p>
+              <h4 class="mt-2 text-3xl font-bold">100%</h4>
+              <p class="mt-2 text-sm text-slate-300">
+                Transparent workflow from listing to delivery
+              </p>
+            </div>
+            <div class="rounded-2xl bg-white/10 p-5">
+              <p class="text-sm text-slate-300">Community support</p>
+              <h4 class="mt-2 text-3xl font-bold">High</h4>
+              <p class="mt-2 text-sm text-slate-300">
+                Designed for collaborative civic participation
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="px-6 pb-20 lg:px-8">
+      <div
+        class="mx-auto max-w-7xl rounded-[32px] bg-brand-600 px-8 py-14 text-white shadow-soft lg:px-14"
+      >
+        <div class="grid items-center gap-8 lg:grid-cols-2">
+          <div>
+            <p
+              class="text-sm font-semibold uppercase tracking-[0.2em] text-green-100"
+            >
+              Get started
+            </p>
+            <h2 class="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+              Join the movement to make food redistribution smarter
+            </h2>
+            <p class="mt-4 max-w-2xl text-green-50">
+              Whether you are donating food, requesting support, or helping with
+              delivery, FeedForward helps you contribute with purpose.
+            </p>
+          </div>
+
+          <div class="flex flex-col gap-4 sm:flex-row lg:justify-end">
+            <a
+              href="register.html"
+              class="rounded-2xl bg-white px-6 py-3 text-center text-sm font-semibold text-brand-700 transition hover:bg-slate-100"
+            >
+              Create Account
+            </a>
+            <a
+              href="login.html"
+              class="rounded-2xl border border-white/40 px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-white/10"
+            >
+              Login Now
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 bg-white">
+      <div
+        class="mx-auto grid max-w-7xl gap-10 px-6 py-12 lg:grid-cols-4 lg:px-8"
+      >
+        <div class="lg:col-span-2">
+          <div class="flex items-center gap-3">
+            <div
+              class="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-600 text-lg font-bold text-white"
+            >
+              F
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-slate-900">FeedForward</h3>
+              <p class="text-sm text-slate-500">
+                Share food, reduce waste, support people.
+              </p>
+            </div>
+          </div>
+          <p class="mt-4 max-w-xl leading-7 text-slate-600">
+            A modern food redistribution platform connecting donors, receivers,
+            and volunteers to create faster, smarter, and more meaningful
+            community impact.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="font-semibold text-slate-900">Navigation</h4>
+          <ul class="mt-4 space-y-3 text-sm text-slate-600">
+            <li>
+              <a href="#home" class="transition hover:text-brand-700">Home</a>
+            </li>
+            <li>
+              <a href="#how-it-works" class="transition hover:text-brand-700"
+                >How It Works</a
+              >
+            </li>
+            <li>
+              <a href="#features" class="transition hover:text-brand-700"
+                >Features</a
+              >
+            </li>
+            <li>
+              <a href="#impact" class="transition hover:text-brand-700"
+                >Impact</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-semibold text-slate-900">Access</h4>
+          <ul class="mt-4 space-y-3 text-sm text-slate-600">
+            <li>
+              <a href="login.html" class="transition hover:text-brand-700"
+                >Login</a
+              >
+            </li>
+            <li>
+              <a href="register.html" class="transition hover:text-brand-700"
+                >Register</a
+              >
+            </li>
+            <li>
+              <a
+                href="available_food.html"
+                class="transition hover:text-brand-700"
+                >Available Food</a
+              >
+            </li>
+            <li>
+              <a
+                href="donor_dashboard.html"
+                class="transition hover:text-brand-700"
+                >Dashboard</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="border-t border-slate-200">
+        <div
+          class="mx-auto flex max-w-7xl flex-col gap-3 px-6 py-5 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between lg:px-8"
+        >
+          <p>© 2026 FeedForward. All rights reserved.</p>
+          <p>Designed for a clean, modern web technology project.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- External JS -->
+    <script src="js/main.js"></script>
+  </body>
 </html>

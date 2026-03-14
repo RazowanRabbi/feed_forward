@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | FeedForward</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                50: "#f0fdf4",
+                100: "#dcfce7",
+                500: "#22c55e",
+                600: "#16a34a",
+                700: "#15803d",
+                900: "#14532d",
+              },
+            },
+            boxShadow: {
+              soft: "0 10px 30px rgba(15, 23, 42, 0.08)",
+            },
+          },
+        },
+      };
+    </script>
+
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body class="min-h-screen bg-slate-50 text-slate-800">
+    <div class="min-h-screen lg:grid lg:grid-cols-2">
+      <!-- Left Panel -->
+      <section
+        class="relative hidden overflow-hidden bg-gradient-to-br from-brand-50 via-white to-slate-100 lg:block"
+      >
+        <div class="absolute inset-0 grid-bg opacity-50"></div>
+
+        <div class="relative flex h-full flex-col px-10 py-10 xl:px-14">
+          <div class="mb-12">
+            <a href="index.html" class="inline-flex items-center gap-3">
+              <div
+                class="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-600 text-lg font-bold text-white shadow-soft"
+              >
+                F
+              </div>
+              <div>
+                <h1 class="text-xl font-bold tracking-tight text-slate-900">
+                  FeedForward
+                </h1>
+                <p class="text-sm text-slate-500">
+                  Reduce waste. Feed communities.
+                </p>
+              </div>
+            </a>
+          </div>
+
+          <div class="max-w-md pt-6">
+            <span
+              class="inline-flex items-center rounded-full border border-brand-200 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-brand-700 shadow-sm"
+            >
+              Welcome back
+            </span>
+
+            <h2
+              class="mt-6 text-4xl font-bold leading-tight tracking-tight text-slate-900"
+            >
+              Sign in to continue your journey with FeedForward
+            </h2>
+
+            <p class="mt-5 text-base leading-7 text-slate-600">
+              Access your account, explore the community, and continue engaging
+              with food support activity in one place.
+            </p>
+
+            <div class="mt-8 space-y-4">
+              <div
+                class="rounded-2xl border border-white/80 bg-white/80 p-4 shadow-soft backdrop-blur"
+              >
+                <p class="text-sm font-semibold text-slate-900">
+                  Simple access
+                </p>
+                <p class="mt-1 text-sm leading-6 text-slate-600">
+                  Login quickly and continue where you left off.
+                </p>
+              </div>
+
+              <div
+                class="rounded-2xl border border-white/80 bg-white/80 p-4 shadow-soft backdrop-blur"
+              >
+                <p class="text-sm font-semibold text-slate-900">
+                  Community-driven
+                </p>
+                <p class="mt-1 text-sm leading-6 text-slate-600">
+                  Stay connected to posts, support activity, and the people
+                  behind them.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Panel -->
+      <section
+        class="flex min-h-screen items-center justify-center px-6 py-8 sm:px-8 lg:px-10"
+      >
+        <div class="w-full max-w-lg">
+          <div class="mb-8 lg:hidden">
+            <a href="index.html" class="inline-flex items-center gap-3">
+              <div
+                class="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-600 text-lg font-bold text-white shadow-soft"
+              >
+                F
+              </div>
+              <div>
+                <h1 class="text-xl font-bold tracking-tight text-slate-900">
+                  FeedForward
+                </h1>
+                <p class="text-sm text-slate-500">
+                  Reduce waste. Feed communities.
+                </p>
+              </div>
+            </a>
+          </div>
+
+          <div
+            class="rounded-[28px] border border-slate-200 bg-white p-7 shadow-soft sm:p-8"
+          >
+            <div>
+              <span
+                class="inline-flex items-center rounded-full border border-brand-200 bg-gradient-to-r from-brand-50 to-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-brand-700 shadow-sm"
+              >
+                Sign in
+              </span>
+
+              <h2 class="mt-4 text-3xl font-bold tracking-tight text-slate-900">
+                Login to FeedForward
+              </h2>
+
+              <p class="mt-3 text-sm leading-6 text-slate-600">
+                Enter your details to access your account.
+              </p>
+            </div>
+
+            <form id="loginForm" class="mt-8 space-y-5" novalidate>
+              <div>
+                <label
+                  for="loginEmail"
+                  class="mb-2 block text-sm font-semibold text-slate-700"
+                  >Email Address</label
+                >
+                <input
+                  type="email"
+                  id="loginEmail"
+                  name="loginEmail"
+                  placeholder="Enter your email"
+                  class="form-input w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+                />
+                <p
+                  class="mt-1 hidden text-xs text-red-500"
+                  data-error-for="loginEmail"
+                ></p>
+              </div>
+
+              <div>
+                <div class="mb-2 flex items-center justify-between gap-4">
+                  <label
+                    for="loginPassword"
+                    class="block text-sm font-semibold text-slate-700"
+                    >Password</label
+                  >
+                  <a
+                    href="#"
+                    class="text-xs font-semibold text-brand-700 transition hover:text-brand-800"
+                  >
+                    Forgot password?
+                  </a>
+                </div>
+
+                <div class="relative">
+                  <input
+                    type="password"
+                    id="loginPassword"
+                    name="loginPassword"
+                    placeholder="Enter your password"
+                    class="form-input w-full rounded-2xl border border-slate-300 px-4 py-3 pr-12 text-sm text-slate-800 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+                  />
+                  <button
+                    type="button"
+                    class="toggle-password absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-500 transition hover:text-brand-700"
+                    data-target="loginPassword"
+                  >
+                    Show
+                  </button>
+                </div>
+                <p
+                  class="mt-1 hidden text-xs text-red-500"
+                  data-error-for="loginPassword"
+                ></p>
+              </div>
+
+              <div class="flex items-center justify-between gap-4">
+                <label class="flex items-center gap-3 text-sm text-slate-600">
+                  <input
+                    type="checkbox"
+                    id="rememberMe"
+                    name="rememberMe"
+                    class="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
+                  />
+                  Remember me
+                </label>
+
+                <span class="text-xs text-slate-400">Secure sign in</span>
+              </div>
+
+              <button
+                type="submit"
+                class="w-full rounded-2xl bg-brand-600 px-6 py-3 text-sm font-semibold text-white shadow-soft transition hover:bg-brand-700"
+              >
+                Login
+              </button>
+            </form>
+
+            <p class="mt-6 text-center text-sm text-slate-600">
+              New to FeedForward?
+              <a
+                href="register.html"
+                class="font-semibold text-brand-700 transition hover:text-brand-800"
+              >
+                Create an account
+              </a>
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="js/main.js"></script>
+  </body>
+</html>

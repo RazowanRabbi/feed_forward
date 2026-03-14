@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register | FeedForward</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                50: "#f0fdf4",
+                100: "#dcfce7",
+                500: "#22c55e",
+                600: "#16a34a",
+                700: "#15803d",
+                900: "#14532d",
+              },
+            },
+            boxShadow: {
+              soft: "0 10px 30px rgba(15, 23, 42, 0.08)",
+            },
+          },
+        },
+      };
+    </script>
+
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body class="min-h-screen bg-slate-50 text-slate-800">
+    <div class="min-h-screen lg:grid lg:grid-cols-2">
+      <!-- Left Panel -->
+      <section
+        class="relative hidden overflow-hidden bg-gradient-to-br from-brand-50 via-white to-emerald-100 lg:flex lg:flex-col lg:justify-between"
+      >
+        <div class="absolute inset-0 grid-bg opacity-60"></div>
+
+        <div class="relative p-10 xl:p-14">
+          <a href="index.html" class="inline-flex items-center gap-3">
+            <div
+              class="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-600 text-lg font-bold text-white shadow-soft"
+            >
+              F
+            </div>
+            <div>
+              <h1 class="text-xl font-bold tracking-tight text-slate-900">
+                FeedForward
+              </h1>
+              <p class="text-sm text-slate-500">
+                Reduce waste. Feed communities.
+              </p>
+            </div>
+          </a>
+        </div>
+
+        <div class="relative px-10 pb-12 xl:px-14">
+          <div class="max-w-xl fade-up">
+            <span
+              class="inline-flex items-center rounded-full border border-brand-200 bg-white px-4 py-2 text-sm font-semibold text-brand-700 shadow-sm"
+            >
+              Join the network
+            </span>
+
+            <h2
+              class="mt-6 text-4xl font-bold leading-tight tracking-tight text-slate-900 xl:text-5xl"
+            >
+              Create your account and start exploring the platform
+            </h2>
+
+            <p class="mt-5 text-lg leading-8 text-slate-600">
+              Browse food support activity, connect with the community, and
+              later apply to actively participate as a donor, volunteer, or
+              customer when needed.
+            </p>
+
+            <div class="mt-10 grid gap-4">
+              <div
+                class="rounded-2xl border border-white/80 bg-white/80 p-5 shadow-soft backdrop-blur"
+              >
+                <h3 class="text-base font-semibold text-slate-900">
+                  Open platform access
+                </h3>
+                <p class="mt-2 text-sm leading-6 text-slate-600">
+                  Anyone can create an account to explore posts, view activity,
+                  and understand how the platform works.
+                </p>
+              </div>
+
+              <div
+                class="rounded-2xl border border-white/80 bg-white/80 p-5 shadow-soft backdrop-blur"
+              >
+                <h3 class="text-base font-semibold text-slate-900">
+                  Verified participation later
+                </h3>
+                <p class="mt-2 text-sm leading-6 text-slate-600">
+                  Admin approval will only be needed when you want to actively
+                  participate in trusted roles like donor, volunteer, or
+                  customer support.
+                </p>
+              </div>
+
+              <div
+                class="rounded-2xl border border-white/80 bg-white/80 p-5 shadow-soft backdrop-blur"
+              >
+                <h3 class="text-base font-semibold text-slate-900">
+                  Built for community impact
+                </h3>
+                <p class="mt-2 text-sm leading-6 text-slate-600">
+                  FeedForward combines social interaction with meaningful food
+                  support, making the platform useful, modern, and
+                  action-oriented.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Panel -->
+      <section
+        class="flex items-center justify-center px-6 py-10 sm:px-8 lg:px-10"
+      >
+        <div class="w-full max-w-xl">
+          <div class="mb-8 lg:hidden">
+            <a href="index.html" class="inline-flex items-center gap-3">
+              <div
+                class="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-600 text-lg font-bold text-white shadow-soft"
+              >
+                F
+              </div>
+              <div>
+                <h1 class="text-xl font-bold tracking-tight text-slate-900">
+                  FeedForward
+                </h1>
+                <p class="text-sm text-slate-500">
+                  Reduce waste. Feed communities.
+                </p>
+              </div>
+            </a>
+          </div>
+
+          <div
+            class="rounded-[28px] border border-slate-200 bg-white p-7 shadow-soft sm:p-8"
+          >
+            <div>
+              <span
+                class="inline-flex items-center rounded-full border border-brand-200 bg-gradient-to-r from-brand-50 to-white px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-brand-700 shadow-sm"
+              >
+                Create Account
+              </span>
+              <h2 class="mt-3 text-3xl font-bold tracking-tight text-slate-900">
+                Join FeedForward
+              </h2>
+              <p class="mt-3 text-sm leading-6 text-slate-600">
+                Sign up to explore the platform. Active participation roles can
+                be requested later inside your account.
+              </p>
+            </div>
+
+            <div
+              class="mt-6 rounded-2xl border border-brand-100 bg-brand-50 p-4"
+            >
+              <p class="text-sm leading-6 text-brand-900">
+                <span class="font-semibold">Note:</span> Creating an account
+                does not require admin approval. Approval is only needed later
+                for trusted active roles.
+              </p>
+            </div>
+
+            <form id="registerForm" class="mt-8 space-y-5" novalidate>
+              <div class="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label
+                    for="firstName"
+                    class="mb-2 block text-sm font-semibold text-slate-700"
+                    >First Name</label
+                  >
+                  <input
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    placeholder="Enter first name"
+                    class="form-input w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+                  />
+                  <p
+                    class="mt-1 hidden text-xs text-red-500"
+                    data-error-for="firstName"
+                  ></p>
+                </div>
+
+                <div>
+                  <label
+                    for="lastName"
+                    class="mb-2 block text-sm font-semibold text-slate-700"
+                    >Last Name</label
+                  >
+                  <input
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    placeholder="Enter last name"
+                    class="form-input w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+                  />
+                  <p
+                    class="mt-1 hidden text-xs text-red-500"
+                    data-error-for="lastName"
+                  ></p>
+                </div>
+              </div>
+
+              <div>
+                <label
+                  for="email"
+                  class="mb-2 block text-sm font-semibold text-slate-700"
+                  >Email Address</label
+                >
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Enter your email"
+                  class="form-input w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+                />
+                <p
+                  class="mt-1 hidden text-xs text-red-500"
+                  data-error-for="email"
+                ></p>
+              </div>
+
+              <div class="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label
+                    for="phone"
+                    class="mb-2 block text-sm font-semibold text-slate-700"
+                    >Phone Number</label
+                  >
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="Enter phone number"
+                    class="form-input w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+                  />
+                  <p
+                    class="mt-1 hidden text-xs text-red-500"
+                    data-error-for="phone"
+                  ></p>
+                </div>
+
+                <div>
+                  <label
+                    for="location"
+                    class="mb-2 block text-sm font-semibold text-slate-700"
+                    >Location</label
+                  >
+                  <input
+                    type="text"
+                    id="location"
+                    name="location"
+                    placeholder="Enter your area/city"
+                    class="form-input w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+                  />
+                  <p
+                    class="mt-1 hidden text-xs text-red-500"
+                    data-error-for="location"
+                  ></p>
+                </div>
+              </div>
+
+              <div class="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label
+                    for="password"
+                    class="mb-2 block text-sm font-semibold text-slate-700"
+                    >Password</label
+                  >
+                  <div class="relative">
+                    <input
+                      type="password"
+                      id="password"
+                      name="password"
+                      placeholder="Create password"
+                      class="form-input w-full rounded-2xl border border-slate-300 px-4 py-3 pr-12 text-sm text-slate-800 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+                    />
+                    <button
+                      type="button"
+                      class="toggle-password absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-500 transition hover:text-brand-700"
+                      data-target="password"
+                    >
+                      Show
+                    </button>
+                  </div>
+                  <p
+                    class="mt-1 hidden text-xs text-red-500"
+                    data-error-for="password"
+                  ></p>
+                </div>
+
+                <div>
+                  <label
+                    for="confirmPassword"
+                    class="mb-2 block text-sm font-semibold text-slate-700"
+                    >Confirm Password</label
+                  >
+                  <div class="relative">
+                    <input
+                      type="password"
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      placeholder="Confirm password"
+                      class="form-input w-full rounded-2xl border border-slate-300 px-4 py-3 pr-12 text-sm text-slate-800 outline-none transition focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+                    />
+                    <button
+                      type="button"
+                      class="toggle-password absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-500 transition hover:text-brand-700"
+                      data-target="confirmPassword"
+                    >
+                      Show
+                    </button>
+                  </div>
+                  <p
+                    class="mt-1 hidden text-xs text-red-500"
+                    data-error-for="confirmPassword"
+                  ></p>
+                </div>
+              </div>
+
+              <div
+                class="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4"
+              >
+                <input
+                  type="checkbox"
+                  id="terms"
+                  name="terms"
+                  class="mt-1 h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
+                />
+                <label for="terms" class="text-sm leading-6 text-slate-600">
+                  I agree to the platform terms and understand that trusted
+                  active roles may require later verification and approval.
+                </label>
+              </div>
+              <p
+                class="-mt-2 hidden text-xs text-red-500"
+                data-error-for="terms"
+              ></p>
+
+              <button
+                type="submit"
+                class="w-full rounded-2xl bg-brand-600 px-6 py-3 text-sm font-semibold text-white shadow-soft transition hover:bg-brand-700"
+              >
+                Create Account
+              </button>
+            </form>
+
+            <p class="mt-6 text-center text-sm text-slate-600">
+              Already have an account?
+              <a
+                href="login.html"
+                class="font-semibold text-brand-700 transition hover:text-brand-800"
+              >
+                Login here
+              </a>
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="js/main.js"></script>
+  </body>
+</html>
