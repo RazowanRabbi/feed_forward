@@ -89,7 +89,7 @@ if (registerForm) {
     terms.addEventListener("change", clearTermsError);
   }
 
-  registerForm.addEventListener("submit", (e) => {
+  registerForm.addEventListener("submit", async (e) =>  {
     e.preventDefault();
 
     fields.forEach(clearError);
@@ -156,10 +156,32 @@ if (registerForm) {
     }
 
     if (isValid) {
-      alert("Account created successfully! Please login to continue.");
+  const role = "receiver";
+  const name = firstName + " " + lastName;
+
+  try {
+    const res = await fetch("http://localhost:5000/api/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ name, email, password, role, phone, location })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert("Registration successful! Please login.");
       registerForm.reset();
       window.location.href = "login.html";
+    } else {
+      alert(data.message);
     }
+  } catch (error) {
+    console.error(error);
+    alert("Something went wrong. Make sure backend is running.");
+  }
+}
   });
 }
 
@@ -197,7 +219,7 @@ if (loginForm) {
     }
   });
 
-  loginForm.addEventListener("submit", (e) => {
+  loginForm.addEventListener("submit", async (e) =>  {
     e.preventDefault();
 
     loginFields.forEach(clearLoginError);
@@ -221,9 +243,37 @@ if (loginForm) {
     }
 
     if (isValid) {
+  try {
+    const res = await fetch("http://localhost:5000/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
       alert("Login successful!");
+
+      // Save token (important for later)
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
       loginForm.reset();
-      window.location.href = "index.html";
+
+      // Redirect to feed page (we will create next)
+      window.location.href = "feed.html";
+
+    } else {
+      alert(data.message);
     }
+
+  } catch (error) {
+    console.error(error);
+    alert("Something went wrong. Make sure backend is running.");
+  }
+}
   });
 }
