@@ -85,6 +85,7 @@
         font-size: clamp(2rem, 6vw, 3.5rem);
         font-weight: 800;
         background: linear-gradient(135deg, #fff 40%, var(--green-light));
+        background-clip: text;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         opacity: 0;
@@ -569,8 +570,10 @@
       }
       .h1 .acc {
         background: linear-gradient(90deg, var(--green-light), #86efac);
+        background-clip: text;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        color: transparent;
       }
       .h-p {
         font-size: 18px;
