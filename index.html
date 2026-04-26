@@ -1,754 +1,598 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FeedForward | Share Food, Support Communities</title>
-
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Tailwind Custom Theme -->
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              brand: {
-                50: "#f0fdf4",
-                100: "#dcfce7",
-                500: "#22c55e",
-                600: "#16a34a",
-                700: "#15803d",
-                900: "#14532d",
-              },
-            },
-            boxShadow: {
-              soft: "0 10px 30px rgba(15, 23, 42, 0.08)",
-            },
-          },
-        },
-      };
-    </script>
-
-    <!-- External CSS -->
-    <link rel="stylesheet" href="css/style.css" />
-  </head>
-  <body class="bg-slate-50 text-slate-800">
-    <!-- Navbar -->
-    <header
-      class="sticky top-0 z-50 border-b border-slate-200/70 bg-white/80 backdrop-blur-md"
-    >
-      <div
-        class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8"
-      >
-        <a href="index.html" class="flex items-center gap-3">
-          <div
-            class="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-600 text-lg font-bold text-white shadow-soft"
-          >
-            F
-          </div>
-          <div>
-            <h1 class="text-lg font-bold tracking-tight text-slate-900">
-              FeedForward
-            </h1>
-            <p class="text-xs text-slate-500">
-              Reduce waste. Feed communities.
-            </p>
-          </div>
-        </a>
-
-        <nav class="hidden items-center gap-8 md:flex">
-          <a
-            href="#home"
-            class="text-sm font-medium text-slate-600 transition hover:text-brand-700"
-            >Home</a
-          >
-          <a
-            href="#how-it-works"
-            class="text-sm font-medium text-slate-600 transition hover:text-brand-700"
-            >How It Works</a
-          >
-          <a
-            href="#features"
-            class="text-sm font-medium text-slate-600 transition hover:text-brand-700"
-            >Features</a
-          >
-          <a
-            href="#impact"
-            class="text-sm font-medium text-slate-600 transition hover:text-brand-700"
-            >Impact</a
-          >
-        </nav>
-
-        <div class="hidden items-center gap-3 md:flex">
-          <a
-            href="login.html"
-            class="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-brand-600 hover:text-brand-700"
-          >
-            Login
-          </a>
-          <a
-            href="register.html"
-            class="rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-soft transition hover:bg-brand-700"
-          >
-            Get Started
-          </a>
-        </div>
-
-        <button
-          id="menuBtn"
-          class="rounded-lg border border-slate-300 p-2 md:hidden"
-          aria-label="Open Menu"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 text-slate-700"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="1.8"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
-        </button>
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FeedForward | Share Food, Support Communities</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green:#16a34a; --green-light:#22c55e; --green-glow:rgba(34,197,94,.18);
+      --dark:#050a07; --dark-2:#0c150e; --dark-3:#111c13; --dark-card:#0f1a11;
+      --light:#f9fafb; --muted:#6b7280;
+      --bd:rgba(255,255,255,.07); --ease:cubic-bezier(0.16,1,0.3,1);
+    }
+    html{scroll-behavior:smooth;}
+    body{font-family:'DM Sans',sans-serif;background:var(--dark);color:#fff;overflow-x:hidden;}
+    h1,h2,h3,h4{font-family:'Syne',sans-serif;}
+ 
+    /* PROGRESS */
+    #prog{position:fixed;top:0;left:0;z-index:9999;height:2px;width:0%;background:linear-gradient(90deg,var(--green),var(--green-light));box-shadow:0 0 12px var(--green-light);transition:width .08s linear;}
+ 
+    /* LOADER */
+    #loader{position:fixed;inset:0;z-index:9998;background:var(--dark);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:28px;transition:opacity .7s var(--ease),transform .7s var(--ease);}
+    #loader.out{opacity:0;pointer-events:none;transform:scale(1.04);}
+    .ld-logo{font-family:'Syne',sans-serif;font-size:clamp(2rem,6vw,3.5rem);font-weight:800;background:linear-gradient(135deg,#fff 40%,var(--green-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;opacity:0;animation:fadeUp .8s var(--ease) .2s forwards;}
+    .ld-bar{width:180px;height:2px;background:var(--dark-3);border-radius:2px;overflow:hidden;opacity:0;animation:fadeUp .5s var(--ease) .5s forwards;}
+    .ld-fill{height:100%;width:0%;background:var(--green-light);box-shadow:0 0 8px var(--green-light);animation:loadFill 1.2s var(--ease) .6s forwards;}
+    @keyframes loadFill{to{width:100%}} @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+ 
+    /* CURSOR */
+    #cur{position:fixed;z-index:9997;pointer-events:none;mix-blend-mode:difference;width:14px;height:14px;background:#fff;border-radius:50%;transform:translate(-50%,-50%);transition:width .3s var(--ease),height .3s var(--ease);}
+    #cur-ring{position:fixed;z-index:9996;pointer-events:none;width:44px;height:44px;border:1px solid rgba(34,197,94,.4);border-radius:50%;transform:translate(-50%,-50%);}
+    #cur.big{width:60px;height:60px;opacity:.15;} #cur-ring.big{width:80px;height:80px;}
+    @media(max-width:768px){#cur,#cur-ring{display:none}}
+ 
+    /* NAVBAR */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:22px 0;transition:padding .4s var(--ease),background .4s,box-shadow .4s;}
+    nav.stuck{padding:14px 0;background:rgba(5,10,7,.88);backdrop-filter:blur(24px);box-shadow:0 1px 0 var(--bd),0 8px 40px rgba(0,0,0,.4);}
+    .nw{max-width:1280px;margin:0 auto;padding:0 36px;display:flex;align-items:center;justify-content:space-between;}
+    .n-logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
+    .n-icon{width:38px;height:38px;border-radius:12px;background:var(--green);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:#fff;box-shadow:0 0 20px rgba(34,197,94,.35);transition:transform .3s var(--ease),box-shadow .3s;}
+    .n-logo:hover .n-icon{transform:rotate(-8deg) scale(1.08);box-shadow:0 0 30px rgba(34,197,94,.5);}
+    .n-logo strong{display:block;font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:#fff;}
+    .n-logo span{font-size:11px;color:rgba(255,255,255,.4);}
+    .n-links{display:flex;align-items:center;gap:36px;}
+    .n-links a{font-size:14px;font-weight:500;color:rgba(255,255,255,.55);text-decoration:none;transition:color .2s;position:relative;}
+    .n-links a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--green-light);transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease);}
+    .n-links a:hover{color:#fff;} .n-links a:hover::after{transform:scaleX(1);}
+    .n-btns{display:flex;gap:10px;align-items:center;}
+    .nb-g{padding:8px 18px;font-size:13px;font-weight:600;color:rgba(255,255,255,.65);border:1px solid var(--bd);border-radius:10px;text-decoration:none;transition:border-color .2s,color .2s,background .2s;}
+    .nb-g:hover{border-color:rgba(34,197,94,.4);color:#fff;background:rgba(34,197,94,.06);}
+    .nb-s{padding:8px 18px;font-size:13px;font-weight:700;color:#fff;background:var(--green);border-radius:10px;text-decoration:none;box-shadow:0 0 18px rgba(34,197,94,.3);transition:background .2s,box-shadow .2s,transform .2s;}
+    .nb-s:hover{background:#15803d;box-shadow:0 0 28px rgba(34,197,94,.45);transform:translateY(-1px);}
+    .ham{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none;}
+    .ham span{display:block;width:22px;height:2px;background:rgba(255,255,255,.7);border-radius:2px;}
+    #mob{display:none;position:fixed;inset:0;z-index:99;background:var(--dark-2);padding:100px 36px 40px;flex-direction:column;gap:32px;}
+    #mob.open{display:flex;}
+    #mob a{font-family:'Syne',sans-serif;font-size:28px;font-weight:700;color:#fff;text-decoration:none;}
+    .mob-x{position:absolute;top:24px;right:24px;width:42px;height:42px;background:var(--dark-3);border:none;color:#fff;border-radius:10px;font-size:18px;cursor:pointer;}
+ 
+    /* REVEAL */
+    .sr{opacity:0;transform:translateY(50px);transition:opacity .9s var(--ease),transform .9s var(--ease);}
+    .sr.in{opacity:1;transform:none;}
+    .sr-r{opacity:0;transform:translateX(60px);transition:opacity .9s var(--ease),transform .9s var(--ease);}
+    .sr-r.in{opacity:1;transform:none;}
+    .sr-s{opacity:0;transform:scale(.9);transition:opacity .9s var(--ease),transform .9s var(--ease);}
+    .sr-s.in{opacity:1;transform:scale(1);}
+    .d1{transition-delay:.1s!important} .d2{transition-delay:.18s!important}
+    .d3{transition-delay:.26s!important} .d4{transition-delay:.34s!important}
+    .d5{transition-delay:.42s!important} .d6{transition-delay:.5s!important}
+ 
+    /* CHIP */
+    .chip{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;border:1px solid rgba(34,197,94,.25);background:rgba(34,197,94,.07);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--green-light);margin-bottom:20px;}
+    .chip-dot{width:6px;height:6px;border-radius:50%;background:var(--green-light);animation:blink 2s ease-in-out infinite;}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+    .chip-dark{border-color:rgba(22,163,74,.25);background:rgba(22,163,74,.07);color:var(--green);}
+ 
+    /* ═══ HERO ═══ */
+    #home{min-height:100vh;display:flex;align-items:center;padding-top:100px;position:relative;overflow:hidden;}
+    .g-blob{position:absolute;border-radius:50%;pointer-events:none;filter:blur(90px);}
+    .gb1{width:700px;height:700px;top:-200px;right:-150px;background:radial-gradient(circle,rgba(34,197,94,.13) 0%,transparent 70%);}
+    .gb2{width:500px;height:500px;bottom:-100px;left:-100px;background:radial-gradient(circle,rgba(22,163,74,.1) 0%,transparent 70%);}
+    .gb3{width:400px;height:400px;top:30%;left:35%;background:radial-gradient(circle,rgba(187,247,208,.06) 0%,transparent 70%);}
+    .dot-bg{position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,.04) 1px,transparent 1px);background-size:40px 40px;}
+    .hero-w{max-width:1280px;margin:0 auto;padding:0 36px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;position:relative;z-index:1;}
+ 
+    .h-eyebrow{display:inline-flex;align-items:center;gap:10px;padding:8px 18px;border-radius:999px;border:1px solid rgba(34,197,94,.2);background:rgba(34,197,94,.07);font-size:12px;font-weight:600;color:rgba(255,255,255,.7);margin-bottom:32px;}
+    .e-dot{width:7px;height:7px;border-radius:50%;background:var(--green-light);animation:blink 2s ease-in-out infinite;}
+    .h1{font-size:clamp(3rem,5.5vw,5rem);font-weight:800;line-height:1.04;letter-spacing:-2.5px;margin-bottom:26px;}
+    .h1 .line{display:block;overflow:hidden;}
+    .h1 .line span{display:block;animation:lineUp .9s var(--ease) forwards;opacity:0;transform:translateY(100%);}
+    .h1 .line:nth-child(1) span{animation-delay:.3s} .h1 .line:nth-child(2) span{animation-delay:.45s} .h1 .line:nth-child(3) span{animation-delay:.6s}
+    @keyframes lineUp{to{opacity:1;transform:none}}
+    .h1 .acc{background:linear-gradient(90deg,var(--green-light),#86efac);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .h-p{font-size:18px;line-height:1.8;color:rgba(255,255,255,.55);max-width:460px;margin-bottom:40px;}
+    .h-btns{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:60px;}
+    .hb-main{display:inline-flex;align-items:center;gap:10px;padding:15px 30px;font-size:15px;font-weight:700;color:#fff;background:var(--green);border-radius:14px;text-decoration:none;box-shadow:0 4px 24px rgba(34,197,94,.35),0 0 0 1px rgba(34,197,94,.3);transition:background .2s,box-shadow .2s,transform .3s var(--ease);}
+    .hb-main:hover{background:#15803d;box-shadow:0 8px 36px rgba(34,197,94,.45),0 0 0 1px rgba(34,197,94,.4);transform:translateY(-2px);}
+    .hb-main svg{transition:transform .3s var(--ease);} .hb-main:hover svg{transform:translateX(5px);}
+    .hb-ghost{display:inline-flex;align-items:center;gap:10px;padding:15px 30px;font-size:15px;font-weight:600;color:rgba(255,255,255,.7);border:1px solid var(--bd);border-radius:14px;text-decoration:none;transition:border-color .2s,color .2s,background .2s,transform .3s var(--ease);}
+    .hb-ghost:hover{border-color:rgba(34,197,94,.3);color:#fff;background:rgba(34,197,94,.05);transform:translateY(-2px);}
+    .h-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+    .hst{background:rgba(255,255,255,.03);border:1px solid var(--bd);border-radius:16px;padding:20px 16px;transition:border-color .3s,background .3s,transform .3s var(--ease);}
+    .hst:hover{border-color:rgba(34,197,94,.2);background:rgba(34,197,94,.04);transform:translateY(-4px);}
+    .hst h3{font-size:28px;font-weight:800;margin-bottom:4px;}
+    .hst p{font-size:12px;color:rgba(255,255,255,.4);}
+ 
+    /* Hero image mosaic */
+    .h-right{position:relative;}
+    .mosaic{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:14px;}
+    .iz{border-radius:20px;overflow:hidden;position:relative;}
+    .iz img{width:100%;display:block;object-fit:cover;transform:scale(1.08);transition:transform 1.2s var(--ease);}
+    .iz.zoomed img{transform:scale(1);}
+    .iz::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(5,10,7,.7) 100%);}
+    .iz-lbl{position:absolute;bottom:14px;left:14px;z-index:1;font-size:11px;font-weight:600;color:rgba(255,255,255,.8);background:rgba(5,10,7,.5);backdrop-filter:blur(8px);padding:5px 10px;border-radius:8px;border:1px solid var(--bd);}
+    .iz-tall{grid-row:span 2;} .iz-tall img{height:100%;min-height:320px;} .iz-short img{height:160px;}
+    .m-badge{position:absolute;bottom:-20px;left:-20px;z-index:2;background:var(--dark-card);border:1px solid var(--bd);border-radius:16px;padding:16px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 16px 48px rgba(0,0,0,.5);animation:bFloat 5s ease-in-out infinite;}
+    @keyframes bFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    .m-badge2{position:absolute;top:-16px;right:-16px;z-index:2;background:var(--green);border-radius:14px;padding:12px 18px;box-shadow:0 8px 28px rgba(34,197,94,.4);animation:bFloat 6s ease-in-out infinite .5s;}
+    .m-badge2 p{font-size:11px;color:rgba(255,255,255,.7);margin-bottom:2px;}
+    .m-badge2 strong{font-size:20px;font-weight:800;}
+    .badge-icon{width:40px;height:40px;border-radius:12px;background:rgba(34,197,94,.15);display:flex;align-items:center;justify-content:center;font-size:20px;}
+    .badge-txt strong{display:block;font-size:16px;font-weight:700;}
+    .badge-txt span{font-size:12px;color:rgba(255,255,255,.4);}
+ 
+    /* MARQUEE */
+    .mq-wrap{background:rgba(255,255,255,.03);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);overflow:hidden;padding:18px 0;}
+    .mq-track{display:flex;gap:48px;width:max-content;animation:mq 24s linear infinite;}
+    .mq-track:hover{animation-play-state:paused;}
+    @keyframes mq{to{transform:translateX(-50%)}}
+    .mq-item{display:flex;align-items:center;gap:12px;font-size:13px;font-weight:500;color:rgba(255,255,255,.3);white-space:nowrap;}
+    .mq-dot{width:4px;height:4px;background:var(--green);border-radius:50%;flex-shrink:0;}
+ 
+    /* HOW IT WORKS */
+    #how-it-works{padding:140px 0;background:var(--dark-2);position:relative;overflow:hidden;}
+    .hiw-glow{position:absolute;width:800px;height:400px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(ellipse,rgba(34,197,94,.07) 0%,transparent 70%);pointer-events:none;filter:blur(60px);}
+    .hiw-w{max-width:1280px;margin:0 auto;padding:0 36px;position:relative;z-index:1;}
+    .hiw-top{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:end;margin-bottom:80px;}
+    .hiw-h2{font-size:clamp(2.2rem,4vw,3.4rem);font-weight:800;letter-spacing:-1.5px;line-height:1.1;}
+    .hiw-right p{font-size:17px;line-height:1.8;color:rgba(255,255,255,.5);}
+    .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+    .step{background:var(--dark-card);border:1px solid var(--bd);border-radius:24px;padding:40px 32px;position:relative;overflow:hidden;transition:border-color .4s,box-shadow .4s,transform .4s var(--ease);}
+    .step::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(34,197,94,.06) 0%,transparent 60%);opacity:0;transition:opacity .4s;}
+    .step:hover{border-color:rgba(34,197,94,.2);box-shadow:0 0 40px rgba(34,197,94,.08);transform:translateY(-6px);}
+    .step:hover::before{opacity:1;}
+    .s-num{width:54px;height:54px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;margin-bottom:28px;}
+    .sn-g{background:rgba(34,197,94,.12);color:var(--green-light);border:1px solid rgba(34,197,94,.2);}
+    .sn-a{background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.15);}
+    .sn-b{background:rgba(96,165,250,.1);color:#60a5fa;border:1px solid rgba(96,165,250,.15);}
+    .step h3{font-size:20px;font-weight:700;margin-bottom:14px;}
+    .step p{font-size:15px;color:rgba(255,255,255,.45);line-height:1.7;}
+    .s-emoji{position:absolute;right:22px;top:22px;font-size:28px;opacity:.1;transition:opacity .3s,transform .3s;}
+    .step:hover .s-emoji{opacity:.2;transform:scale(1.15) rotate(-8deg);}
+ 
+    /* FOOD SHOWCASE */
+    #showcase{padding:120px 0;background:var(--dark);}
+    .show-w{max-width:1280px;margin:0 auto;padding:0 36px;}
+    .show-top{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:end;margin-bottom:64px;}
+    .show-h2{font-size:clamp(2.2rem,4vw,3.2rem);font-weight:800;letter-spacing:-1.5px;line-height:1.1;}
+    .show-right p{font-size:16px;color:rgba(255,255,255,.45);line-height:1.8;margin-bottom:24px;}
+    .img-strip{display:grid;grid-template-columns:1.6fr 1fr 1fr;grid-template-rows:260px 200px;gap:16px;}
+    .is-item{border-radius:20px;overflow:hidden;position:relative;cursor:pointer;}
+    .is-item img{width:100%;height:100%;object-fit:cover;transform:scale(1.08);transition:transform 1.2s var(--ease),filter .4s;filter:brightness(.85);}
+    .is-item:hover img{transform:scale(1.02);filter:brightness(1);}
+    .is-item.tall{grid-row:span 2;}
+    .is-ov{position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(5,10,7,.8) 100%);}
+    .is-tag{position:absolute;bottom:16px;left:16px;font-size:12px;font-weight:600;color:#fff;background:rgba(34,197,94,.8);padding:5px 12px;border-radius:8px;}
+ 
+    /* FEATURES — light section */
+    #features{padding:140px 0;background:var(--light);color:var(--dark);}
+    .feat-w{max-width:1280px;margin:0 auto;padding:0 36px;}
+    .feat-top{text-align:center;max-width:600px;margin:0 auto 80px;}
+    .feat-h2{font-size:clamp(2.2rem,4vw,3.2rem);font-weight:800;letter-spacing:-1.5px;line-height:1.1;color:var(--dark);margin-bottom:16px;}
+    .feat-desc{font-size:17px;color:#4b5563;line-height:1.75;}
+    .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+    .fc{background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:22px;padding:36px 28px;position:relative;overflow:hidden;cursor:pointer;transition:transform .4s var(--ease),box-shadow .4s,border-color .3s;}
+    .fc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green),var(--green-light));transform:scaleX(0);transform-origin:left;transition:transform .4s var(--ease);}
+    .fc:hover{transform:translateY(-6px);box-shadow:0 20px 48px rgba(22,163,74,.1);border-color:rgba(22,163,74,.15);}
+    .fc:hover::after{transform:scaleX(1);}
+    .f-icon{width:50px;height:50px;border-radius:14px;background:#f0fdf4;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:22px;transition:transform .3s var(--ease),background .3s;}
+    .fc:hover .f-icon{transform:scale(1.1) rotate(-6deg);background:#dcfce7;}
+    .fc h3{font-size:18px;font-weight:700;color:var(--dark);margin-bottom:12px;}
+    .fc p{font-size:14px;color:#4b5563;line-height:1.7;}
+ 
+    /* IMPACT */
+    #impact{padding:140px 0;background:var(--dark-2);position:relative;overflow:hidden;}
+    .imp-glow{position:absolute;width:600px;height:600px;top:-100px;left:-100px;background:radial-gradient(circle,rgba(34,197,94,.09) 0%,transparent 70%);pointer-events:none;filter:blur(80px);}
+    .imp-w{max-width:1280px;margin:0 auto;padding:0 36px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;position:relative;z-index:1;}
+    .imp-h2{font-size:clamp(2.2rem,4vw,3.2rem);font-weight:800;letter-spacing:-1.5px;line-height:1.1;margin-bottom:20px;}
+    .imp-desc{font-size:17px;color:rgba(255,255,255,.5);line-height:1.8;margin-bottom:44px;}
+    .imp-items{display:flex;flex-direction:column;gap:16px;}
+    .ii{display:flex;align-items:flex-start;gap:18px;padding:22px;background:rgba(255,255,255,.03);border:1px solid var(--bd);border-radius:18px;transition:border-color .3s,background .3s,transform .3s var(--ease);}
+    .ii:hover{border-color:rgba(34,197,94,.2);background:rgba(34,197,94,.04);transform:translateX(6px);}
+    .ii-ic{width:42px;height:42px;flex-shrink:0;border-radius:12px;background:rgba(34,197,94,.1);display:flex;align-items:center;justify-content:center;font-size:18px;transition:transform .3s var(--ease);}
+    .ii:hover .ii-ic{transform:scale(1.1) rotate(-5deg);}
+    .ii h3{font-size:15px;font-weight:600;margin-bottom:6px;}
+    .ii p{font-size:14px;color:rgba(255,255,255,.4);line-height:1.6;}
+    .imp-img-w{border-radius:28px;overflow:hidden;position:relative;}
+    .imp-img-w img{width:100%;height:480px;object-fit:cover;transform:scale(1.06);transition:transform 1.2s var(--ease);}
+    .imp-img-w.zoomed img{transform:scale(1);}
+    .imp-img-w::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,10,7,.1) 0%,rgba(5,10,7,.6) 100%);}
+    .isf-grid{position:absolute;bottom:28px;left:28px;right:28px;z-index:1;display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+    .isf{background:rgba(5,10,7,.75);backdrop-filter:blur(16px);border:1px solid var(--bd);border-radius:16px;padding:18px;transition:border-color .3s,transform .3s var(--ease);}
+    .isf:hover{border-color:rgba(34,197,94,.25);transform:scale(1.02);}
+    .isf p{font-size:11px;color:rgba(255,255,255,.4);margin-bottom:6px;}
+    .isf h4{font-size:24px;font-weight:800;}
+    .isf small{font-size:11px;color:rgba(255,255,255,.3);line-height:1.5;display:block;margin-top:4px;}
+ 
+    /* TRUST */
+    #trust{padding:80px 0;background:#fff;}
+    .trust-w{max-width:1280px;margin:0 auto;padding:0 36px;display:grid;grid-template-columns:repeat(4,1fr);gap:32px;}
+    .trust-item{text-align:center;padding:24px;border-right:1px solid rgba(0,0,0,.06);}
+    .trust-item:last-child{border-right:none;}
+    .trust-item h3{font-size:36px;font-weight:800;color:var(--dark);margin-bottom:8px;}
+    .trust-item p{font-size:14px;color:#6b7280;line-height:1.5;}
+ 
+    /* CTA */
+    #cta{padding:80px 36px;}
+    .cta-box{max-width:1280px;margin:0 auto;background:var(--dark-card);border:1px solid var(--bd);border-radius:36px;padding:80px 72px;display:grid;grid-template-columns:1fr auto;gap:60px;align-items:center;position:relative;overflow:hidden;box-shadow:0 0 0 1px rgba(34,197,94,.08),0 40px 80px rgba(0,0,0,.4);}
+    .cta-box::before{content:'';position:absolute;top:-120px;right:120px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(34,197,94,.12) 0%,transparent 70%);pointer-events:none;}
+    .cta-lbl{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--green-light);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+    .cta-lbl::before{content:'';display:block;width:20px;height:2px;background:var(--green-light);border-radius:2px;}
+    .cta-h2{font-size:clamp(2rem,3.5vw,2.8rem);font-weight:800;letter-spacing:-1.5px;line-height:1.1;margin-bottom:16px;}
+    .cta-p{font-size:16px;color:rgba(255,255,255,.5);line-height:1.7;max-width:420px;}
+    .cta-btns{display:flex;flex-direction:column;gap:12px;position:relative;z-index:1;white-space:nowrap;min-width:200px;}
+    .cb-m{padding:15px 32px;text-align:center;font-size:14px;font-weight:700;color:#fff;background:var(--green);border-radius:14px;text-decoration:none;box-shadow:0 0 28px rgba(34,197,94,.3);transition:background .2s,box-shadow .2s,transform .3s var(--ease);}
+    .cb-m:hover{background:#15803d;box-shadow:0 0 40px rgba(34,197,94,.45);transform:translateY(-2px);}
+    .cb-g{padding:15px 32px;text-align:center;font-size:14px;font-weight:600;color:rgba(255,255,255,.6);border:1px solid var(--bd);border-radius:14px;text-decoration:none;transition:border-color .2s,color .2s,background .2s,transform .3s var(--ease);}
+    .cb-g:hover{border-color:rgba(34,197,94,.3);color:#fff;background:rgba(34,197,94,.05);transform:translateY(-2px);}
+ 
+    /* FOOTER */
+    footer{background:var(--dark);border-top:1px solid var(--bd);padding:64px 36px 0;}
+    .foot-w{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr;gap:60px;padding-bottom:48px;}
+    .foot-logo{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+    .foot-brand p{font-size:15px;color:rgba(255,255,255,.35);line-height:1.8;max-width:320px;}
+    .foot-col h4{font-size:13px;font-weight:700;color:rgba(255,255,255,.7);margin-bottom:20px;}
+    .foot-col ul{list-style:none;display:flex;flex-direction:column;gap:12px;}
+    .foot-col a{font-size:14px;color:rgba(255,255,255,.3);text-decoration:none;transition:color .2s;}
+    .foot-col a:hover{color:var(--green-light);}
+    .foot-btm{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-top:1px solid var(--bd);font-size:13px;color:rgba(255,255,255,.2);}
+ 
+    /* RESPONSIVE */
+    @media(max-width:1024px){
+      .hero-w,.hiw-top,.show-top,.imp-w,.trust-w,.cta-box,.foot-w{grid-template-columns:1fr;}
+      .steps{grid-template-columns:1fr;}
+      .feat-grid{grid-template-columns:1fr 1fr;}
+      .mosaic{grid-template-columns:1fr 1fr;} .iz-tall{grid-row:span 1;}
+      .img-strip{grid-template-columns:1fr 1fr;grid-template-rows:auto;} .is-item.tall{grid-row:span 1;}
+      .trust-w{grid-template-columns:1fr 1fr;} .trust-item{border-right:none;border-bottom:1px solid rgba(0,0,0,.06);}
+      .cta-box{padding:56px 40px;} .cta-btns{flex-direction:row;min-width:unset;}
+    }
+    @media(max-width:768px){
+      .n-links,.n-btns{display:none;} .ham{display:flex;}
+      .feat-grid{grid-template-columns:1fr;}
+      .h-stats{grid-template-columns:repeat(3,1fr);}
+      .isf-grid{grid-template-columns:1fr 1fr;}
+      .foot-w{grid-template-columns:1fr;}
+      .img-strip{grid-template-columns:1fr;}
+      .mosaic{grid-template-columns:1fr;} .iz-tall{grid-row:span 1;}
+      .hiw-top{grid-template-columns:1fr;} .show-top{grid-template-columns:1fr;}
+      .cta-box{padding:44px 28px;grid-template-columns:1fr;} .cta-btns{flex-direction:row;}
+    }
+  </style>
+</head>
+<body>
+ 
+<div id="prog"></div>
+ 
+<!-- LOADER -->
+<div id="loader">
+  <div class="ld-logo">FeedForward</div>
+  <div class="ld-bar"><div class="ld-fill"></div></div>
+</div>
+ 
+<!-- CURSOR -->
+<div id="cur"></div><div id="cur-ring"></div>
+ 
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="nw">
+    <a href="index.html" class="n-logo">
+      <div class="n-icon">F</div>
+      <div><strong>FeedForward</strong><span>Reduce waste. Feed communities.</span></div>
+    </a>
+    <div class="n-links">
+      <a href="#home">Home</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#features">Features</a>
+      <a href="#impact">Impact</a>
+    </div>
+    <div class="n-btns">
+      <a href="login.html" class="nb-g">Login</a>
+      <a href="register.html" class="nb-s">Get Started →</a>
+    </div>
+    <button class="ham" id="menuBtn"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+ 
+<!-- MOBILE MENU -->
+<div id="mob">
+  <button class="mob-x" id="closeMenu">✕</button>
+  <a href="#home">Home</a>
+  <a href="#how-it-works">How It Works</a>
+  <a href="#features">Features</a>
+  <a href="#impact">Impact</a>
+  <a href="login.html" class="nb-g" style="text-align:center;margin-top:8px">Login</a>
+  <a href="register.html" class="nb-s" style="text-align:center">Get Started →</a>
+</div>
+ 
+<!-- ═══════════ HERO ═══════════ -->
+<section id="home">
+  <div class="g-blob gb1"></div>
+  <div class="g-blob gb2"></div>
+  <div class="g-blob gb3"></div>
+  <div class="dot-bg"></div>
+ 
+  <div class="hero-w">
+    <div>
+      <div class="h-eyebrow sr"><span class="e-dot"></span>Smarter food redistribution for modern communities</div>
+      <h1 class="h1">
+        <span class="line"><span>Turn surplus</span></span>
+        <span class="line"><span>food into <span class="acc">real</span></span></span>
+        <span class="line"><span><span class="acc">community</span> impact</span></span>
+      </h1>
+      <p class="h-p sr d2">FeedForward connects donors, receivers, and volunteers through one coordinated platform that reduces food waste and increases access to support across communities.</p>
+      <div class="h-btns sr d3">
+        <a href="register.html" class="hb-main">Start Sharing Food <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <a href="#features" class="hb-ghost">Explore Features</a>
       </div>
-
-      <!-- Mobile Menu -->
-      <div
-        id="mobileMenu"
-        class="hidden border-t border-slate-200 bg-white md:hidden"
-      >
-        <div class="space-y-3 px-6 py-4">
-          <a href="#home" class="block text-sm font-medium text-slate-700"
-            >Home</a
-          >
-          <a
-            href="#how-it-works"
-            class="block text-sm font-medium text-slate-700"
-            >How It Works</a
-          >
-          <a href="#features" class="block text-sm font-medium text-slate-700"
-            >Features</a
-          >
-          <a href="#impact" class="block text-sm font-medium text-slate-700"
-            >Impact</a
-          >
-
-          <div class="flex gap-3 pt-2">
-            <a
-              href="login.html"
-              class="w-full rounded-xl border border-slate-300 px-4 py-2 text-center text-sm font-semibold text-slate-700"
-            >
-              Login
-            </a>
-            <a
-              href="register.html"
-              class="w-full rounded-xl bg-brand-600 px-4 py-2 text-center text-sm font-semibold text-white"
-            >
-              Register
-            </a>
-          </div>
-        </div>
+      <div class="h-stats sr d4">
+        <div class="hst"><h3 class="cu" data-t="500">0</h3><p>Meals rescued</p></div>
+        <div class="hst"><h3 class="cu" data-t="120">0</h3><p>Active donors</p></div>
+        <div class="hst"><h3 class="cu" data-t="40">0</h3><p>Volunteer pickups</p></div>
       </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section id="home" class="relative overflow-hidden">
-      <div
-        class="absolute inset-0 bg-gradient-to-br from-brand-50 via-white to-emerald-100"
-      ></div>
-      <div class="absolute inset-0 grid-bg opacity-60"></div>
-
-      <div
-        class="relative mx-auto grid max-w-7xl items-center gap-14 px-6 py-20 lg:grid-cols-2 lg:px-8 lg:py-28"
-      >
-        <div>
-          <span
-            class="fade-up inline-flex items-center rounded-full border border-brand-200 bg-white px-4 py-2 text-sm font-semibold text-brand-700 shadow-sm"
-          >
-            Smarter food redistribution for modern communities
-          </span>
-
-          <h2
-            class="fade-up fade-up-delay-1 mt-6 max-w-2xl text-4xl font-bold leading-tight tracking-tight text-slate-900 sm:text-5xl lg:text-6xl"
-          >
-            Turn surplus food into
-            <span class="text-brand-600">real community impact</span>
-          </h2>
-
-          <p
-            class="fade-up fade-up-delay-2 mt-6 max-w-xl text-lg leading-8 text-slate-600"
-          >
-            FeedForward is a food redistribution platform that helps donors
-            share surplus food, enables receivers to access support faster, and
-            empowers volunteers to contribute to meaningful community impact.
-          </p>
-
-          <div
-            class="fade-up fade-up-delay-3 mt-8 flex flex-col gap-4 sm:flex-row"
-          >
-            <a
-              href="register.html"
-              class="rounded-2xl bg-brand-600 px-6 py-3 text-center text-sm font-semibold text-white shadow-soft transition hover:bg-brand-700"
-            >
-              Start Sharing Food
-            </a>
-            <a
-              href="#features"
-              class="rounded-2xl border border-slate-300 bg-white px-6 py-3 text-center text-sm font-semibold text-slate-700 transition hover:border-brand-600 hover:text-brand-700"
-            >
-              Explore Features
-            </a>
-          </div>
-
-          <div class="mt-10 grid max-w-lg grid-cols-3 gap-4">
-            <div
-              class="rounded-2xl border border-white/80 bg-white/80 p-4 shadow-soft backdrop-blur"
-            >
-              <h3 class="text-2xl font-bold text-slate-900">500+</h3>
-              <p class="mt-1 text-sm text-slate-500">Meals rescued</p>
-            </div>
-            <div
-              class="rounded-2xl border border-white/80 bg-white/80 p-4 shadow-soft backdrop-blur"
-            >
-              <h3 class="text-2xl font-bold text-slate-900">120+</h3>
-              <p class="mt-1 text-sm text-slate-500">Active donors</p>
-            </div>
-            <div
-              class="rounded-2xl border border-white/80 bg-white/80 p-4 shadow-soft backdrop-blur"
-            >
-              <h3 class="text-2xl font-bold text-slate-900">40+</h3>
-              <p class="mt-1 text-sm text-slate-500">Volunteer pickups</p>
-            </div>
-          </div>
+    </div>
+ 
+    <div class="h-right sr-r">
+      <div class="m-badge2"><p>Meals redirected today</p><strong>1,240+</strong></div>
+      <div class="mosaic">
+        <div class="iz iz-tall">
+          <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&auto=format&fit=crop&q=80" alt="Fresh food"/>
+          <span class="iz-lbl">Fresh Donations</span>
         </div>
-
-        <div class="relative">
-          <div
-            class="float-soft mx-auto max-w-xl rounded-[32px] border border-white/70 bg-white/85 p-5 shadow-soft backdrop-blur"
-          >
-            <div class="rounded-[28px] bg-slate-900 p-5 text-white">
-              <div class="flex items-center justify-between">
-                <div>
-                  <p class="text-sm text-slate-300">Platform Overview</p>
-                  <h3 class="mt-1 text-2xl font-semibold">
-                    Community impact snapshot
-                  </h3>
-                </div>
-                <span
-                  class="rounded-full bg-brand-500/20 px-3 py-1 text-xs font-semibold text-green-300"
-                >
-                  Public View
-                </span>
-              </div>
-
-              <div class="mt-6 grid gap-4 sm:grid-cols-2">
-                <div class="rounded-2xl bg-white/10 p-4">
-                  <p class="text-sm text-slate-300">Meals redirected</p>
-                  <h4 class="mt-2 text-3xl font-bold">1,240+</h4>
-                </div>
-                <div class="rounded-2xl bg-white/10 p-4">
-                  <p class="text-sm text-slate-300">Registered donors</p>
-                  <h4 class="mt-2 text-3xl font-bold">320+</h4>
-                </div>
-                <div class="rounded-2xl bg-white/10 p-4">
-                  <p class="text-sm text-slate-300">Community partners</p>
-                  <h4 class="mt-2 text-3xl font-bold">85+</h4>
-                </div>
-                <div class="rounded-2xl bg-white/10 p-4">
-                  <p class="text-sm text-slate-300">Successful deliveries</p>
-                  <h4 class="mt-2 text-3xl font-bold">540+</h4>
-                </div>
-              </div>
-
-              <div class="mt-6 rounded-2xl bg-white/10 p-4">
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p class="text-sm text-slate-300">Our mission</p>
-                    <h5 class="mt-1 text-lg font-semibold">
-                      Connecting surplus with need
-                    </h5>
-                  </div>
-                  <span
-                    class="rounded-full bg-emerald-400/20 px-3 py-1 text-xs font-semibold text-emerald-300"
-                  >
-                    Ongoing
-                  </span>
-                </div>
-                <p class="mt-3 text-sm leading-6 text-slate-300">
-                  FeedForward helps donors, receivers, and volunteers work
-                  together through one coordinated platform that reduces food
-                  waste and increases access to support.
-                </p>
-              </div>
-            </div>
-
-            <div class="mt-4 grid gap-4 sm:grid-cols-3">
-              <div class="rounded-2xl border border-slate-200 bg-white p-4">
-                <p class="text-sm text-slate-500">For donors</p>
-                <h4 class="mt-1 font-semibold text-slate-900">
-                  List surplus food
-                </h4>
-                <p class="mt-1 text-sm text-slate-500">
-                  Share extra food before it goes to waste.
-                </p>
-              </div>
-              <div class="rounded-2xl border border-slate-200 bg-white p-4">
-                <p class="text-sm text-slate-500">For receivers</p>
-                <h4 class="mt-1 font-semibold text-slate-900">
-                  Find available support
-                </h4>
-                <p class="mt-1 text-sm text-slate-500">
-                  Browse food donations that match your needs.
-                </p>
-              </div>
-              <div class="rounded-2xl border border-slate-200 bg-white p-4">
-                <p class="text-sm text-slate-500">For volunteers</p>
-                <h4 class="mt-1 font-semibold text-slate-900">
-                  Help with delivery
-                </h4>
-                <p class="mt-1 text-sm text-slate-500">
-                  Make redistribution faster through local action.
-                </p>
-              </div>
-            </div>
-          </div>
+        <div class="iz iz-short">
+          <img src="https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=400&auto=format&fit=crop&q=80" alt="Community food"/>
+          <span class="iz-lbl">Community Meals</span>
         </div>
-      </div>
-    </section>
-
-    <!-- Trust Section -->
-    <section class="border-y border-slate-200 bg-white">
-      <div
-        class="mx-auto grid max-w-7xl gap-6 px-6 py-8 text-center sm:grid-cols-2 lg:grid-cols-4 lg:px-8"
-      >
-        <div>
-          <p class="text-3xl font-bold text-slate-900">Transparent</p>
-          <p class="mt-2 text-sm text-slate-500">
-            Clear roles and coordinated food redistribution flow
-          </p>
-        </div>
-        <div>
-          <p class="text-3xl font-bold text-slate-900">Accessible</p>
-          <p class="mt-2 text-sm text-slate-500">
-            Built for donors, receivers, and community volunteers
-          </p>
-        </div>
-        <div>
-          <p class="text-3xl font-bold text-slate-900">Efficient</p>
-          <p class="mt-2 text-sm text-slate-500">
-            Reduces delay between available food and community need
-          </p>
-        </div>
-        <div>
-          <p class="text-3xl font-bold text-slate-900">Impactful</p>
-          <p class="mt-2 text-sm text-slate-500">
-            Supports real food recovery and local social good
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- How It Works -->
-    <section id="how-it-works" class="mx-auto max-w-7xl px-6 py-20 lg:px-8">
-      <div class="max-w-2xl">
-        <p
-          class="text-sm font-semibold uppercase tracking-[0.2em] text-brand-600"
-        >
-          How it works
-        </p>
-        <h2
-          class="mt-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl"
-        >
-          A simple flow designed for speed and coordination
-        </h2>
-        <p class="mt-4 text-lg leading-8 text-slate-600">
-          FeedForward makes food donation easier by connecting the right people
-          at the right time.
-        </p>
-      </div>
-
-      <div class="mt-12 grid gap-6 md:grid-cols-3">
-        <div
-          class="rounded-3xl border border-slate-200 bg-white p-8 shadow-soft transition duration-300 hover:-translate-y-1 hover:border-brand-200"
-        >
-          <div
-            class="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-100 text-xl font-bold text-brand-700"
-          >
-            01
-          </div>
-          <h3 class="mt-6 text-xl font-semibold text-slate-900">
-            Donors list surplus food
-          </h3>
-          <p class="mt-3 leading-7 text-slate-600">
-            Restaurants, households, or events can quickly add available food
-            with quantity, location, and expiry details.
-          </p>
-        </div>
-
-        <div
-          class="rounded-3xl border border-slate-200 bg-white p-8 shadow-soft transition duration-300 hover:-translate-y-1 hover:border-brand-200"
-        >
-          <div
-            class="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-100 text-xl font-bold text-amber-700"
-          >
-            02
-          </div>
-          <h3 class="mt-6 text-xl font-semibold text-slate-900">
-            Receivers request what they need
-          </h3>
-          <p class="mt-3 leading-7 text-slate-600">
-            NGOs, shelters, and communities can browse available donations and
-            claim food that fits their needs.
-          </p>
-        </div>
-
-        <div
-          class="rounded-3xl border border-slate-200 bg-white p-8 shadow-soft transition duration-300 hover:-translate-y-1 hover:border-brand-200"
-        >
-          <div
-            class="flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-100 text-xl font-bold text-sky-700"
-          >
-            03
-          </div>
-          <h3 class="mt-6 text-xl font-semibold text-slate-900">
-            Volunteers complete deliveries
-          </h3>
-          <p class="mt-3 leading-7 text-slate-600">
-            Nearby volunteers can accept pickup tasks, coordinate delivery, and
-            keep the whole process moving smoothly.
-          </p>
+        <div class="iz iz-short">
+          <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=400&auto=format&fit=crop&q=80" alt="Vegetables"/>
+          <span class="iz-lbl">Fresh Produce</span>
         </div>
       </div>
-    </section>
-
-    <!-- Features -->
-    <section id="features" class="bg-white py-20">
-      <div class="mx-auto max-w-7xl px-6 lg:px-8">
-        <div class="max-w-2xl">
-          <p
-            class="text-sm font-semibold uppercase tracking-[0.2em] text-brand-600"
-          >
-            Core features
-          </p>
-          <h2
-            class="mt-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl"
-          >
-            Everything important in one coordinated platform
-          </h2>
-        </div>
-
-        <div class="mt-12 grid gap-6 lg:grid-cols-3">
-          <div
-            class="rounded-3xl border border-slate-200 bg-slate-50 p-8 transition hover:shadow-soft"
-          >
-            <h3 class="text-xl font-semibold text-slate-900">
-              Real-time food listings
-            </h3>
-            <p class="mt-3 leading-7 text-slate-600">
-              Quickly publish available food so nearby receivers can see
-              opportunities without delay.
-            </p>
-          </div>
-
-          <div
-            class="rounded-3xl border border-slate-200 bg-slate-50 p-8 transition hover:shadow-soft"
-          >
-            <h3 class="text-xl font-semibold text-slate-900">
-              Smart matching logic
-            </h3>
-            <p class="mt-3 leading-7 text-slate-600">
-              Prioritize matches based on urgency, location, quantity, and
-              delivery feasibility.
-            </p>
-          </div>
-
-          <div
-            class="rounded-3xl border border-slate-200 bg-slate-50 p-8 transition hover:shadow-soft"
-          >
-            <h3 class="text-xl font-semibold text-slate-900">
-              Expiry-aware system
-            </h3>
-            <p class="mt-3 leading-7 text-slate-600">
-              Prevent waste and reduce risk by automatically handling expiring
-              or unavailable items.
-            </p>
-          </div>
-
-          <div
-            class="rounded-3xl border border-slate-200 bg-slate-50 p-8 transition hover:shadow-soft"
-          >
-            <h3 class="text-xl font-semibold text-slate-900">
-              Volunteer coordination
-            </h3>
-            <p class="mt-3 leading-7 text-slate-600">
-              Assign pickup and delivery tasks to volunteers for smoother
-              logistics and faster redistribution.
-            </p>
-          </div>
-
-          <div
-            class="rounded-3xl border border-slate-200 bg-slate-50 p-8 transition hover:shadow-soft"
-          >
-            <h3 class="text-xl font-semibold text-slate-900">
-              Impact analytics
-            </h3>
-            <p class="mt-3 leading-7 text-slate-600">
-              Track meals saved, donations completed, active users, and the
-              overall value created.
-            </p>
-          </div>
-
-          <div
-            class="rounded-3xl border border-slate-200 bg-slate-50 p-8 transition hover:shadow-soft"
-          >
-            <h3 class="text-xl font-semibold text-slate-900">
-              Community-first experience
-            </h3>
-            <p class="mt-3 leading-7 text-slate-600">
-              Build trust through organized workflows, clear status updates, and
-              meaningful contribution visibility.
-            </p>
-          </div>
+      <div class="m-badge">
+        <div class="badge-icon">🚴</div>
+        <div class="badge-txt"><strong>540+ deliveries</strong><span>Completed by volunteers</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- MARQUEE -->
+<div class="mq-wrap">
+  <div class="mq-track">
+    <span class="mq-item"><span class="mq-dot"></span>Zero Food Waste</span>
+    <span class="mq-item"><span class="mq-dot"></span>Community Impact</span>
+    <span class="mq-item"><span class="mq-dot"></span>Smart Redistribution</span>
+    <span class="mq-item"><span class="mq-dot"></span>Donor Network</span>
+    <span class="mq-item"><span class="mq-dot"></span>Volunteer Driven</span>
+    <span class="mq-item"><span class="mq-dot"></span>Real-Time Listings</span>
+    <span class="mq-item"><span class="mq-dot"></span>Expiry-Aware System</span>
+    <span class="mq-item"><span class="mq-dot"></span>Social Good</span>
+    <span class="mq-item"><span class="mq-dot"></span>Zero Food Waste</span>
+    <span class="mq-item"><span class="mq-dot"></span>Community Impact</span>
+    <span class="mq-item"><span class="mq-dot"></span>Smart Redistribution</span>
+    <span class="mq-item"><span class="mq-dot"></span>Donor Network</span>
+    <span class="mq-item"><span class="mq-dot"></span>Volunteer Driven</span>
+    <span class="mq-item"><span class="mq-dot"></span>Real-Time Listings</span>
+    <span class="mq-item"><span class="mq-dot"></span>Expiry-Aware System</span>
+    <span class="mq-item"><span class="mq-dot"></span>Social Good</span>
+  </div>
+</div>
+ 
+<!-- ═══════════ HOW IT WORKS ═══════════ -->
+<section id="how-it-works">
+  <div class="hiw-glow"></div>
+  <div class="hiw-w">
+    <div class="hiw-top">
+      <div>
+        <div class="chip sr"><span class="chip-dot"></span>How it works</div>
+        <h2 class="hiw-h2 sr d1">A simple flow designed<br>for speed &amp; coordination</h2>
+      </div>
+      <div class="sr-r"><p class="hiw-right">FeedForward makes food donation easier by connecting the right people at the right time — from listing to delivery in minutes.</p></div>
+    </div>
+    <div class="steps">
+      <div class="step sr d1"><span class="s-emoji">🍱</span><div class="s-num sn-g">01</div><h3>Donors list surplus food</h3><p>Restaurants, households, or events can quickly add available food with quantity, location, and expiry details.</p></div>
+      <div class="step sr d2"><span class="s-emoji">🤝</span><div class="s-num sn-a">02</div><h3>Receivers request what they need</h3><p>NGOs, shelters, and communities can browse available donations and claim food that fits their needs.</p></div>
+      <div class="step sr d3"><span class="s-emoji">🚴</span><div class="s-num sn-b">03</div><h3>Volunteers complete deliveries</h3><p>Nearby volunteers can accept pickup tasks, coordinate delivery, and keep the whole process moving smoothly.</p></div>
+    </div>
+  </div>
+</section>
+ 
+<!-- ═══════════ FOOD SHOWCASE ═══════════ -->
+<section id="showcase">
+  <div class="show-w">
+    <div class="show-top">
+      <div>
+        <div class="chip sr"><span class="chip-dot"></span>Real food, real impact</div>
+        <h2 class="show-h2 sr d1">From kitchens to communities —<br>fresh every day</h2>
+      </div>
+      <div class="sr-r">
+        <p class="show-right">Every item listed on FeedForward is real food, ready to be picked up and delivered to someone who needs it. Nothing goes to waste.</p>
+        <a href="register.html" class="nb-s" style="display:inline-block;margin-top:4px">Join the network →</a>
+      </div>
+    </div>
+    <div class="img-strip">
+      <div class="is-item tall sr d1">
+        <img src="https://images.unsplash.com/photo-1543339308-43e59d6b73a6?w=700&auto=format&fit=crop&q=80" alt="Community kitchen"/>
+        <div class="is-ov"></div><span class="is-tag">Community Kitchen</span>
+      </div>
+      <div class="is-item sr d2">
+        <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&auto=format&fit=crop&q=80" alt="Fresh salad"/>
+        <div class="is-ov"></div><span class="is-tag">Fresh Produce</span>
+      </div>
+      <div class="is-item sr d3">
+        <img src="https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?w=500&auto=format&fit=crop&q=80" alt="Bread"/>
+        <div class="is-ov"></div><span class="is-tag">Bakery Surplus</span>
+      </div>
+      <div class="is-item sr d4">
+        <img src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=500&auto=format&fit=crop&q=80" alt="Cooked food"/>
+        <div class="is-ov"></div><span class="is-tag">Cooked Meals</span>
+      </div>
+      <div class="is-item sr d5">
+        <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=500&auto=format&fit=crop&q=80" alt="Fruits"/>
+        <div class="is-ov"></div><span class="is-tag">Fruit Donations</span>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- ═══════════ FEATURES ═══════════ -->
+<section id="features">
+  <div class="feat-w">
+    <div class="feat-top sr">
+      <div class="chip chip-dark"><span class="chip-dot" style="background:var(--green)"></span>Core features</div>
+      <h2 class="feat-h2">Everything important in one coordinated platform</h2>
+      <p class="feat-desc">One platform. Three roles. Endless community impact. Built for speed, trust, and real-world logistics.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="fc sr d1"><div class="f-icon">⚡</div><h3>Real-time food listings</h3><p>Quickly publish available food so nearby receivers can see opportunities without delay.</p></div>
+      <div class="fc sr d2"><div class="f-icon">🎯</div><h3>Smart matching logic</h3><p>Prioritize matches based on urgency, location, quantity, and delivery feasibility.</p></div>
+      <div class="fc sr d3"><div class="f-icon">⏱️</div><h3>Expiry-aware system</h3><p>Prevent waste and reduce risk by automatically handling expiring or unavailable items.</p></div>
+      <div class="fc sr d4"><div class="f-icon">🧭</div><h3>Volunteer coordination</h3><p>Assign pickup and delivery tasks to volunteers for smoother logistics and faster redistribution.</p></div>
+      <div class="fc sr d5"><div class="f-icon">📊</div><h3>Impact analytics</h3><p>Track meals saved, donations completed, active users, and the overall value created.</p></div>
+      <div class="fc sr d6"><div class="f-icon">🌱</div><h3>Community-first experience</h3><p>Build trust through organized workflows, clear status updates, and meaningful contribution visibility.</p></div>
+    </div>
+  </div>
+</section>
+ 
+<!-- ═══════════ IMPACT ═══════════ -->
+<section id="impact">
+  <div class="imp-glow"></div>
+  <div class="imp-w">
+    <div>
+      <div class="chip sr"><span class="chip-dot"></span>Why it matters</div>
+      <h2 class="imp-h2 sr d1">A digital bridge between excess and need</h2>
+      <p class="imp-desc sr d2">FeedForward is more than a donation platform — it is a coordinated response to food waste, social inequality, and inefficient distribution.</p>
+      <div class="imp-items">
+        <div class="ii sr d2"><div class="ii-ic">♻️</div><div><h3>Less waste, more value</h3><p>Surplus food becomes a useful resource instead of being discarded.</p></div></div>
+        <div class="ii sr d3"><div class="ii-ic">⚡</div><div><h3>Faster help for receivers</h3><p>Shelters and communities can find nearby food support with better timing and visibility.</p></div></div>
+        <div class="ii sr d4"><div class="ii-ic">🌟</div><div><h3>Meaningful volunteer contribution</h3><p>Volunteers become a key operational part of the food redistribution cycle.</p></div></div>
+      </div>
+    </div>
+    <div class="sr-r">
+      <div class="imp-img-w">
+        <img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&auto=format&fit=crop&q=80" alt="Community food distribution"/>
+        <div class="isf-grid">
+          <div class="isf"><p>Food saved</p><h4>1.2T+</h4><small>Reduction in preventable waste</small></div>
+          <div class="isf"><p>Access improved</p><h4>24/7</h4><small>Visibility for food availability</small></div>
+          <div class="isf"><p>System clarity</p><h4>100%</h4><small>Transparent workflow</small></div>
+          <div class="isf"><p>Community support</p><h4>High</h4><small>Collaborative civic participation</small></div>
         </div>
       </div>
-    </section>
-
-    <!-- Impact -->
-    <section id="impact" class="mx-auto max-w-7xl px-6 py-20 lg:px-8">
-      <div class="grid items-center gap-12 lg:grid-cols-2">
-        <div>
-          <p
-            class="text-sm font-semibold uppercase tracking-[0.2em] text-brand-600"
-          >
-            Why it matters
-          </p>
-          <h2
-            class="mt-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl"
-          >
-            A digital bridge between excess and need
-          </h2>
-          <p class="mt-5 text-lg leading-8 text-slate-600">
-            FeedForward is more than a donation platform. It is a coordinated
-            response to food waste, social inequality, and inefficient
-            distribution.
-          </p>
-
-          <div class="mt-8 space-y-5">
-            <div
-              class="rounded-2xl border border-slate-200 bg-white p-5 shadow-soft"
-            >
-              <h3 class="font-semibold text-slate-900">
-                Less waste, more value
-              </h3>
-              <p class="mt-2 text-slate-600">
-                Surplus food becomes a useful resource instead of being
-                discarded.
-              </p>
-            </div>
-            <div
-              class="rounded-2xl border border-slate-200 bg-white p-5 shadow-soft"
-            >
-              <h3 class="font-semibold text-slate-900">
-                Faster help for receivers
-              </h3>
-              <p class="mt-2 text-slate-600">
-                Shelters and communities can find nearby food support with
-                better timing and visibility.
-              </p>
-            </div>
-            <div
-              class="rounded-2xl border border-slate-200 bg-white p-5 shadow-soft"
-            >
-              <h3 class="font-semibold text-slate-900">
-                Meaningful volunteer contribution
-              </h3>
-              <p class="mt-2 text-slate-600">
-                Volunteers become a key operational part of the food
-                redistribution cycle.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div
-          class="rounded-[32px] bg-gradient-to-br from-slate-900 to-slate-800 p-8 text-white shadow-soft"
-        >
-          <p class="text-sm text-slate-300">Projected platform value</p>
-          <h3 class="mt-2 text-3xl font-bold">
-            Built for measurable social impact
-          </h3>
-
-          <div class="mt-8 grid gap-5 sm:grid-cols-2">
-            <div class="rounded-2xl bg-white/10 p-5">
-              <p class="text-sm text-slate-300">Food saved</p>
-              <h4 class="mt-2 text-3xl font-bold">1.2T+</h4>
-              <p class="mt-2 text-sm text-slate-300">
-                Potential reduction in preventable waste through coordination
-              </p>
-            </div>
-            <div class="rounded-2xl bg-white/10 p-5">
-              <p class="text-sm text-slate-300">Access improved</p>
-              <h4 class="mt-2 text-3xl font-bold">24/7</h4>
-              <p class="mt-2 text-sm text-slate-300">
-                Visibility for food availability and requests
-              </p>
-            </div>
-            <div class="rounded-2xl bg-white/10 p-5">
-              <p class="text-sm text-slate-300">System clarity</p>
-              <h4 class="mt-2 text-3xl font-bold">100%</h4>
-              <p class="mt-2 text-sm text-slate-300">
-                Transparent workflow from listing to delivery
-              </p>
-            </div>
-            <div class="rounded-2xl bg-white/10 p-5">
-              <p class="text-sm text-slate-300">Community support</p>
-              <h4 class="mt-2 text-3xl font-bold">High</h4>
-              <p class="mt-2 text-sm text-slate-300">
-                Designed for collaborative civic participation
-              </p>
-            </div>
-          </div>
-        </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- ═══════════ TRUST NUMBERS ═══════════ -->
+<section id="trust">
+  <div class="trust-w">
+    <div class="trust-item sr d1"><h3 class="cu" data-t="1240">0</h3><p>Meals redirected through the platform</p></div>
+    <div class="trust-item sr d2"><h3 class="cu" data-t="320">0</h3><p>Registered donors sharing surplus food</p></div>
+    <div class="trust-item sr d3"><h3 class="cu" data-t="85">0</h3><p>Community partners and NGOs onboarded</p></div>
+    <div class="trust-item sr d4"><h3 class="cu" data-t="540">0</h3><p>Successful volunteer deliveries completed</p></div>
+  </div>
+</section>
+ 
+<!-- ═══════════ CTA ═══════════ -->
+<section id="cta">
+  <div class="cta-box sr-s">
+    <div>
+      <div class="cta-lbl">Get started today</div>
+      <h2 class="cta-h2">Join the movement to make food redistribution smarter</h2>
+      <p class="cta-p">Whether you are donating food, requesting support, or helping with delivery, FeedForward helps you contribute with purpose.</p>
+    </div>
+    <div class="cta-btns">
+      <a href="register.html" class="cb-m">Create Account</a>
+      <a href="login.html" class="cb-g">Login Now</a>
+    </div>
+  </div>
+</section>
+ 
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div class="foot-w">
+    <div class="foot-brand">
+      <div class="foot-logo">
+        <div class="n-icon">F</div>
+        <div><strong style="font-family:'Syne',sans-serif;font-size:16px;color:#fff;display:block">FeedForward</strong><span style="font-size:11px;color:rgba(255,255,255,.4)">Share food, reduce waste, support people.</span></div>
       </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="px-6 pb-20 lg:px-8">
-      <div
-        class="mx-auto max-w-7xl rounded-[32px] bg-brand-600 px-8 py-14 text-white shadow-soft lg:px-14"
-      >
-        <div class="grid items-center gap-8 lg:grid-cols-2">
-          <div>
-            <p
-              class="text-sm font-semibold uppercase tracking-[0.2em] text-green-100"
-            >
-              Get started
-            </p>
-            <h2 class="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-              Join the movement to make food redistribution smarter
-            </h2>
-            <p class="mt-4 max-w-2xl text-green-50">
-              Whether you are donating food, requesting support, or helping with
-              delivery, FeedForward helps you contribute with purpose.
-            </p>
-          </div>
-
-          <div class="flex flex-col gap-4 sm:flex-row lg:justify-end">
-            <a
-              href="register.html"
-              class="rounded-2xl bg-white px-6 py-3 text-center text-sm font-semibold text-brand-700 transition hover:bg-slate-100"
-            >
-              Create Account
-            </a>
-            <a
-              href="login.html"
-              class="rounded-2xl border border-white/40 px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-white/10"
-            >
-              Login Now
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="border-t border-slate-200 bg-white">
-      <div
-        class="mx-auto grid max-w-7xl gap-10 px-6 py-12 lg:grid-cols-4 lg:px-8"
-      >
-        <div class="lg:col-span-2">
-          <div class="flex items-center gap-3">
-            <div
-              class="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-600 text-lg font-bold text-white"
-            >
-              F
-            </div>
-            <div>
-              <h3 class="text-lg font-bold text-slate-900">FeedForward</h3>
-              <p class="text-sm text-slate-500">
-                Share food, reduce waste, support people.
-              </p>
-            </div>
-          </div>
-          <p class="mt-4 max-w-xl leading-7 text-slate-600">
-            A modern food redistribution platform connecting donors, receivers,
-            and volunteers to create faster, smarter, and more meaningful
-            community impact.
-          </p>
-        </div>
-
-        <div>
-          <h4 class="font-semibold text-slate-900">Navigation</h4>
-          <ul class="mt-4 space-y-3 text-sm text-slate-600">
-            <li>
-              <a href="#home" class="transition hover:text-brand-700">Home</a>
-            </li>
-            <li>
-              <a href="#how-it-works" class="transition hover:text-brand-700"
-                >How It Works</a
-              >
-            </li>
-            <li>
-              <a href="#features" class="transition hover:text-brand-700"
-                >Features</a
-              >
-            </li>
-            <li>
-              <a href="#impact" class="transition hover:text-brand-700"
-                >Impact</a
-              >
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 class="font-semibold text-slate-900">Access</h4>
-          <ul class="mt-4 space-y-3 text-sm text-slate-600">
-            <li>
-              <a href="login.html" class="transition hover:text-brand-700"
-                >Login</a
-              >
-            </li>
-            <li>
-              <a href="register.html" class="transition hover:text-brand-700"
-                >Register</a
-              >
-            </li>
-            <li>
-              <a
-                href="available_food.html"
-                class="transition hover:text-brand-700"
-                >Available Food</a
-              >
-            </li>
-            <li>
-              <a
-                href="donor_dashboard.html"
-                class="transition hover:text-brand-700"
-                >Dashboard</a
-              >
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="border-t border-slate-200">
-        <div
-          class="mx-auto flex max-w-7xl flex-col gap-3 px-6 py-5 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between lg:px-8"
-        >
-          <p>© 2026 FeedForward. All rights reserved.</p>
-          <p>Designed for a clean, modern web technology project.</p>
-        </div>
-      </div>
-    </footer>
-
-    <!-- External JS -->
-    <script src="js/main.js"></script>
-  </body>
+      <p>A modern food redistribution platform connecting donors, receivers, and volunteers to create faster, smarter, and more meaningful community impact.</p>
+    </div>
+    <div class="foot-col">
+      <h4>Navigation</h4>
+      <ul><li><a href="#home">Home</a></li><li><a href="#how-it-works">How It Works</a></li><li><a href="#features">Features</a></li><li><a href="#impact">Impact</a></li></ul>
+    </div>
+    <div class="foot-col">
+      <h4>Access</h4>
+      <ul><li><a href="login.html">Login</a></li><li><a href="register.html">Register</a></li><li><a href="available_food.html">Available Food</a></li><li><a href="donor_dashboard.html">Dashboard</a></li></ul>
+    </div>
+  </div>
+  <div class="foot-btm">
+    <p>© 2026 FeedForward. All rights reserved.</p>
+    <p>Designed for a clean, modern web technology project.</p>
+  </div>
+</footer>
+ 
+<script>
+  // Loader
+  window.addEventListener('load',()=>setTimeout(()=>document.getElementById('loader').classList.add('out'),1600));
+ 
+  // Cursor
+  const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+  (function raf(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(raf);})();
+  document.querySelectorAll('a,button').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{cur.classList.add('big');ring.classList.add('big');});
+    el.addEventListener('mouseleave',()=>{cur.classList.remove('big');ring.classList.remove('big');});
+  });
+ 
+  // Navbar + progress
+  const nav=document.getElementById('navbar');
+  window.addEventListener('scroll',()=>{
+    nav.classList.toggle('stuck',window.scrollY>20);
+    document.getElementById('prog').style.width=(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight)*100)+'%';
+  });
+ 
+  // Mobile menu
+  document.getElementById('menuBtn').onclick=()=>document.getElementById('mob').classList.add('open');
+  document.getElementById('closeMenu').onclick=()=>document.getElementById('mob').classList.remove('open');
+  document.querySelectorAll('#mob a').forEach(a=>a.addEventListener('click',()=>document.getElementById('mob').classList.remove('open')));
+ 
+  // Scroll reveal
+  const ro=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.sr,.sr-r,.sr-s').forEach(el=>ro.observe(el));
+ 
+  // Image zoom on scroll
+  const iz=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('zoomed');}),{threshold:.2});
+  document.querySelectorAll('.iz,.imp-img-w').forEach(el=>iz.observe(el));
+  const siz=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){const img=e.target.querySelector('img');if(img)img.style.transform='scale(1.0)';};}),{threshold:.2});
+  document.querySelectorAll('.is-item').forEach(el=>siz.observe(el));
+ 
+  // Counter
+  function countUp(el,target){let s=0;const dur=1800;const t=ts=>{if(!s)s=ts;const p=Math.min((ts-s)/dur,1);const e=1-Math.pow(1-p,4);el.textContent=Math.floor(e*target)+(p===1?'+':'');if(p<1)requestAnimationFrame(t);};requestAnimationFrame(t);}
+  const co=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){countUp(e.target,parseInt(e.target.dataset.t));co.unobserve(e.target);}}),{threshold:.5});
+  document.querySelectorAll('.cu').forEach(el=>co.observe(el));
+ 
+  // Mouse parallax blobs
+  document.addEventListener('mousemove',e=>{
+    const x=(e.clientX/window.innerWidth-.5)*28,y=(e.clientY/window.innerHeight-.5)*28;
+    document.querySelectorAll('.g-blob').forEach((b,i)=>{const f=(i+1)*.35;b.style.transform=`translate(${x*f}px,${y*f}px)`;});
+  });
+ 
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}}));
+ 
+  // 3D tilt on cards
+  document.querySelectorAll('.step,.fc,.hst,.isf').forEach(card=>{
+    card.addEventListener('mousemove',e=>{const r=card.getBoundingClientRect();const x=((e.clientX-r.left)/r.width-.5)*12;const y=((e.clientY-r.top)/r.height-.5)*12;card.style.transform=`translateY(-6px) rotateX(${-y}deg) rotateY(${x}deg)`;card.style.transition='transform .1s';});
+    card.addEventListener('mouseleave',()=>{card.style.transform='';card.style.transition='transform .4s cubic-bezier(0.16,1,0.3,1)';});
+  });
+</script>
+<script src="js/main.js" onerror="void(0)"></script>
+</body>
 </html>
