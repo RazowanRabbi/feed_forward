@@ -89,7 +89,7 @@ if (registerForm) {
     terms.addEventListener("change", clearTermsError);
   }
 
-  registerForm.addEventListener("submit", async (e) =>  {
+  registerForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     fields.forEach(clearError);
@@ -156,32 +156,39 @@ if (registerForm) {
     }
 
     if (isValid) {
-  const role = "receiver";
-  const name = firstName + " " + lastName;
+      const role = "receiver";
+      const name = firstName + " " + lastName;
 
-  try {
-    const res = await fetch("http://localhost:5000/api/auth/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ name, email, password, role, phone, location })
-    });
+      try {
+        const res = await fetch("http://localhost:5000/api/auth/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            password,
+            role,
+            phone,
+            location,
+          }),
+        });
 
-    const data = await res.json();
+        const data = await res.json();
 
-    if (res.ok) {
-      alert("Registration successful! Please login.");
-      registerForm.reset();
-      window.location.href = "login.html";
-    } else {
-      alert(data.message);
+        if (res.ok) {
+          alert("Registration successful! Please login.");
+          registerForm.reset();
+          window.location.href = "login.html";
+        } else {
+          alert(data.message);
+        }
+      } catch (error) {
+        console.error(error);
+        alert("Something went wrong. Make sure backend is running.");
+      }
     }
-  } catch (error) {
-    console.error(error);
-    alert("Something went wrong. Make sure backend is running.");
-  }
-}
   });
 }
 
@@ -219,7 +226,7 @@ if (loginForm) {
     }
   });
 
-  loginForm.addEventListener("submit", async (e) =>  {
+  loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     loginFields.forEach(clearLoginError);
@@ -243,37 +250,48 @@ if (loginForm) {
     }
 
     if (isValid) {
-  try {
-    const res = await fetch("http://localhost:5000/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ email, password })
-    });
+      try {
+        const res = await fetch("http://localhost:5000/api/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        });
 
-    const data = await res.json();
+        const data = await res.json();
 
-    if (res.ok) {
-      alert("Login successful!");
+        if (res.ok) {
+          alert("Login successful!");
 
-      // Save token (important for later)
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+          // Save token (important for later)
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("user", JSON.stringify(data.user));
 
-      loginForm.reset();
+          loginForm.reset();
 
-      // Redirect to feed page (we will create next)
-      window.location.href = "feed.html";
+          // Redirect to feed page (we will create next)
+          if (res.ok) {
+            alert("Login successful!");
 
-    } else {
-      alert(data.message);
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("user", JSON.stringify(data.user));
+
+            loginForm.reset();
+
+            if (data.user.role === "admin") {
+              window.location.href = "admin_dashboard.html";
+            } else {
+              window.location.href = "feed.html";
+            }
+          }
+        } else {
+          alert(data.message);
+        }
+      } catch (error) {
+        console.error(error);
+        alert("Something went wrong. Make sure backend is running.");
+      }
     }
-
-  } catch (error) {
-    console.error(error);
-    alert("Something went wrong. Make sure backend is running.");
-  }
-}
   });
 }

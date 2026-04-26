@@ -3,6 +3,7 @@ const router = express.Router();
 const FoodPost = require("../models/FoodPost");
 
 // Create a new food post
+// Create a new food post
 router.post("/create", async (req, res) => {
   try {
     const {
@@ -10,9 +11,14 @@ router.post("/create", async (req, res) => {
       foodName,
       quantity,
       category,
-      location,
-      expiry,
       description,
+      expiryDateTime,
+      pickupAddress,
+      area,
+      city,
+      latitude,
+      longitude,
+      foodImage
     } = req.body;
 
     const post = new FoodPost({
@@ -20,16 +26,21 @@ router.post("/create", async (req, res) => {
       foodName,
       quantity,
       category,
-      location,
-      expiry,
       description,
+      expiryDateTime,
+      pickupAddress,
+      area,
+      city,
+      latitude,
+      longitude,
+      foodImage
     });
 
     await post.save();
 
     res.status(201).json({
-      message: "Food post created successfully",
-      post,
+      message: "Food post submitted for admin approval",
+      post
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

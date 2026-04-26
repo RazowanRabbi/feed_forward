@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Food Post | FeedForward</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: "#f0fdf4",
+              100: "#dcfce7",
+              500: "#22c55e",
+              600: "#16a34a",
+              700: "#15803d",
+              900: "#14532d",
+            },
+          },
+          boxShadow: {
+            soft: "0 10px 30px rgba(15, 23, 42, 0.08)",
+          },
+        },
+      },
+    };
+  </script>
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body class="min-h-screen bg-slate-50 text-slate-800">
+  <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+      <a href="feed.html" class="flex items-center gap-3">
+        <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-600 text-lg font-bold text-white shadow-soft">
+          F
+        </div>
+        <div>
+          <h1 class="text-xl font-bold text-slate-900">FeedForward</h1>
+          <p class="text-xs text-slate-500">Create donation post</p>
+        </div>
+      </a>
+
+      <a href="feed.html" class="rounded-2xl bg-slate-900 px-5 py-2 text-sm font-semibold text-white hover:bg-brand-700">
+        Back to Feed
+      </a>
+    </div>
+  </header>
+
+  <main class="mx-auto grid max-w-7xl gap-8 px-6 py-10 lg:grid-cols-[1fr_420px]">
+    <section class="rounded-[28px] border border-slate-200 bg-white p-8 shadow-soft">
+      <span class="inline-flex rounded-full border border-brand-200 bg-brand-50 px-4 py-2 text-sm font-semibold text-brand-700">
+        Donor Food Post
+      </span>
+
+      <h1 class="mt-5 text-4xl font-bold tracking-tight text-slate-900">
+        Share surplus food with the community
+      </h1>
+
+      <p class="mt-4 max-w-2xl text-base leading-8 text-slate-600">
+        Fill in the food details carefully. Your post will be reviewed by admin before it appears publicly in the feed.
+      </p>
+
+      <form id="foodPostForm" class="mt-8 space-y-5">
+        <div>
+          <label for="foodName" class="mb-2 block text-sm font-semibold text-slate-700">Food Name</label>
+          <input
+            type="text"
+            id="foodName"
+            placeholder="Example: Chicken biryani, bread, fruits"
+            class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+            required
+          />
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label for="quantity" class="mb-2 block text-sm font-semibold text-slate-700">Quantity</label>
+            <input
+              type="text"
+              id="quantity"
+              placeholder="Example: 20 packs"
+              class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+              required
+            />
+          </div>
+
+          <div>
+            <label for="category" class="mb-2 block text-sm font-semibold text-slate-700">Category</label>
+            <select
+              id="category"
+              class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+              required
+            >
+              <option value="">Select category</option>
+              <option value="Cooked Food">Cooked Food</option>
+              <option value="Raw Food">Raw Food</option>
+              <option value="Packaged Food">Packaged Food</option>
+              <option value="Fruits/Vegetables">Fruits/Vegetables</option>
+              <option value="Bakery">Bakery</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label for="description" class="mb-2 block text-sm font-semibold text-slate-700">Description</label>
+          <textarea
+            id="description"
+            rows="4"
+            placeholder="Describe food condition, packaging, pickup instructions, etc."
+            class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+            required
+          ></textarea>
+        </div>
+
+        <div>
+          <label for="expiryDateTime" class="mb-2 block text-sm font-semibold text-slate-700">Expiry Date & Time</label>
+          <input
+            type="datetime-local"
+            id="expiryDateTime"
+            class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+            required
+          />
+        </div>
+
+        <div>
+          <label for="pickupAddress" class="mb-2 block text-sm font-semibold text-slate-700">Pickup Address</label>
+          <input
+            type="text"
+            id="pickupAddress"
+            placeholder="Example: Road 5, Dhanmondi, Dhaka"
+            class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+            required
+          />
+          <p class="mt-2 text-xs text-slate-500">
+            Later this will support Google Maps address suggestion and automatic location coordinates.
+          </p>
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label for="area" class="mb-2 block text-sm font-semibold text-slate-700">Area</label>
+            <input
+              type="text"
+              id="area"
+              placeholder="Example: Dhanmondi"
+              class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+            />
+          </div>
+
+          <div>
+            <label for="city" class="mb-2 block text-sm font-semibold text-slate-700">City</label>
+            <input
+              type="text"
+              id="city"
+              placeholder="Example: Dhaka"
+              class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label for="foodImage" class="mb-2 block text-sm font-semibold text-slate-700">Food Image URL</label>
+          <input
+            type="text"
+            id="foodImage"
+            placeholder="Paste image URL for now"
+            class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+          />
+          <p class="mt-2 text-xs text-slate-500">
+            For now we use image URL. Later we can upgrade this to real file upload.
+          </p>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full rounded-2xl bg-brand-600 px-6 py-3 text-sm font-semibold text-white shadow-soft transition hover:bg-brand-700"
+        >
+          Submit Post for Approval
+        </button>
+      </form>
+    </section>
+
+    <aside class="rounded-[28px] border border-slate-200 bg-white p-7 shadow-soft">
+      <h2 class="text-2xl font-bold text-slate-900">Posting Rules</h2>
+
+      <div class="mt-6 space-y-4 text-sm leading-6 text-slate-600">
+        <div class="rounded-2xl bg-brand-50 p-4">
+          <p class="font-semibold text-brand-900">Admin approval required</p>
+          <p class="mt-1">Your post will appear in the feed only after admin approval.</p>
+        </div>
+
+        <div class="rounded-2xl bg-slate-50 p-4">
+          <p class="font-semibold text-slate-900">Accurate expiry time</p>
+          <p class="mt-1">Add a realistic expiry time so receivers can act quickly.</p>
+        </div>
+
+        <div class="rounded-2xl bg-slate-50 p-4">
+          <p class="font-semibold text-slate-900">Location-ready design</p>
+          <p class="mt-1">Pickup address is stored now; map coordinates will be added later.</p>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script src="js/addFood.js"></script>
+</body>
+</html>

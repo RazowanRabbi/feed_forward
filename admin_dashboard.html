@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard | FeedForward</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                50: "#f0fdf4",
+                100: "#dcfce7",
+                500: "#22c55e",
+                600: "#16a34a",
+                700: "#15803d",
+                900: "#14532d",
+              },
+            },
+            boxShadow: {
+              soft: "0 10px 30px rgba(15, 23, 42, 0.08)",
+            },
+          },
+        },
+      };
+    </script>
+
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body class="min-h-screen bg-slate-50 text-slate-800">
+    <header
+      class="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur"
+    >
+      <div
+        class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4"
+      >
+        <a href="feed.html" class="flex items-center gap-3">
+          <div
+            class="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-600 text-lg font-bold text-white shadow-soft"
+          >
+            F
+          </div>
+          <div>
+            <h1 class="text-xl font-bold text-slate-900">FeedForward Admin</h1>
+            <p class="text-xs text-slate-500">Approval control center</p>
+          </div>
+        </a>
+
+        <a
+          href="feed.html"
+          class="rounded-2xl bg-slate-900 px-5 py-2 text-sm font-semibold text-white hover:bg-brand-700"
+        >
+          Back to Feed
+        </a>
+      </div>
+    </header>
+
+    <main
+      class="mx-auto grid max-w-7xl gap-6 px-6 py-8 lg:grid-cols-[280px_1fr]"
+    >
+      <!-- Sidebar -->
+      <aside>
+        <div
+          class="rounded-[24px] border border-slate-200 bg-white p-5 shadow-soft"
+        >
+          <h2 class="text-lg font-bold text-slate-900">Admin Panel</h2>
+          <p class="mt-2 text-sm text-slate-500">
+            Manage approvals and platform activity.
+          </p>
+
+          <div class="mt-6 space-y-3">
+            <button
+              id="donorTab"
+              class="w-full rounded-2xl bg-brand-50 px-4 py-3 text-left text-sm font-semibold text-brand-700"
+            >
+              Donor Applications
+            </button>
+
+            <button
+              id="volunteerTab"
+              class="w-full rounded-2xl px-4 py-3 text-left text-sm font-semibold text-slate-600 hover:bg-slate-100"
+            >
+              Volunteer Applications
+            </button>
+
+            <button
+              id="postTab"
+              class="w-full rounded-2xl px-4 py-3 text-left text-sm font-semibold text-slate-600 hover:bg-slate-100"
+            >
+              Post Approvals
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <section class="space-y-6">
+        <div
+          class="rounded-[24px] border border-slate-200 bg-white p-6 shadow-soft"
+        >
+          <span
+            class="inline-flex rounded-full border border-brand-200 bg-brand-50 px-4 py-2 text-sm font-semibold text-brand-700"
+          >
+            Pending Reviews
+          </span>
+
+          <h1 class="mt-4 text-3xl font-bold text-slate-900">
+            Donor Applications
+          </h1>
+
+          <p class="mt-2 text-sm text-slate-500">
+            Review users who requested donor access. Approved donors can create
+            food posts.
+          </p>
+        </div>
+
+        <div id="donorApplications" class="space-y-4">
+          <div
+            class="rounded-[24px] border border-slate-200 bg-white p-6 text-center text-slate-500 shadow-soft"
+          >
+            Loading pending donor applications...
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="js/adminDashboard.js"></script>
+  </body>
+</html>

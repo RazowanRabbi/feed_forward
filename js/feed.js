@@ -148,3 +148,59 @@ async function loadUserPanel() {
 
 // run it
 loadUserPanel();
+
+// ================= LOAD POSTS =================
+
+const feedContainer = document.querySelector("section.space-y-6");
+
+async function loadPosts() {
+  try {
+    const res = await fetch("http://localhost:5000/api/food/all");
+    const posts = await res.json();
+
+    // clear existing posts
+    feedContainer.innerHTML = "";
+
+    posts.forEach(post => {
+      const postHTML = `
+        <article class="rounded-[24px] border border-slate-200 bg-white p-6 shadow-soft">
+
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-bold text-slate-900">
+                ${post.donor?.name || "Unknown"}
+              </h3>
+              <p class="text-sm text-slate-500">${post.category}</p>
+            </div>
+
+            <span class="text-green-600 text-sm font-semibold">
+              ${post.status}
+            </span>
+          </div>
+
+          <h2 class="mt-4 text-xl font-bold text-slate-900">
+            ${post.foodName}
+          </h2>
+
+          <p class="mt-2 text-slate-600">
+            ${post.description}
+          </p>
+
+          <div class="mt-4 grid grid-cols-2 gap-2 text-sm text-slate-600">
+            <p><b>Quantity:</b> ${post.quantity}</p>
+            <p><b>Location:</b> ${post.location}</p>
+            <p><b>Expiry:</b> ${post.expiry}</p>
+          </div>
+
+        </article>
+      `;
+
+      feedContainer.innerHTML += postHTML;
+    });
+
+  } catch (error) {
+    console.error("Feed loading error:", error);
+  }
+}
+
+loadPosts();

@@ -1,3 +1,4 @@
+const adminRoutes = require("./routes/adminRoutes");
 const foodRoutes = require("./routes/foodRoutes");
 const authRoutes = require("./routes/authRoutes");
 const express = require("express");
@@ -11,6 +12,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use("/api/admin", adminRoutes);
 
 app.use("/api/food", foodRoutes);
 
