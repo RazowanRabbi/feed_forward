@@ -151,56 +151,119 @@ loadUserPanel();
 
 // ================= LOAD POSTS =================
 
-const feedContainer = document.querySelector("section.space-y-6");
+const feedContainer = document.getElementById("postsContainer");
+
+function renderPosts(posts) {
+  feedContainer.innerHTML = "";
+
+  if (posts.length === 0) {
+    feedContainer.innerHTML = `
+      <div class="rounded-[24px] border border-slate-200 bg-white p-6 text-center text-slate-500 shadow-soft">
+        No matching food posts found.
+      </div>
+    `;
+    return;
+  }
+
+  posts.forEach((post) => {
+    const postHTML = `
+      <article class="rounded-[24px] border border-slate-200 bg-white p-6 shadow-soft">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="font-bold text-slate-900">
+              ${post.donor?.name || "Unknown"}
+            </h3>
+            <p class="text-sm text-slate-500">${post.category}</p>
+          </div>
+
+          <span class="text-green-600 text-sm font-semibold">
+            ${post.status}
+          </span>
+        </div>
+
+        <h2 class="mt-4 text-xl font-bold text-slate-900">
+          ${post.foodName}
+        </h2>
+
+        <p class="mt-2 text-slate-600">
+          ${post.description}
+        </p>
+
+        <div class="mt-4 grid grid-cols-2 gap-2 text-sm text-slate-600">
+          <p><b>Quantity:</b> ${post.quantity}</p>
+          <p><b>Location:</b> ${post.pickupAddress}</p>
+          <p><b>Expiry:</b> ${new Date(post.expiryDateTime).toLocaleString()}</p>
+        </div>
+
+        <div class="mt-5">
+          <button
+            class="request-food-btn rounded-2xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700"
+            data-post-id="${post._id}"
+            data-donor-id="${post.donor?._id}"
+          >
+            Request Food
+          </button>
+        </div>
+      </article>
+    `;
+
+    feedContainer.innerHTML += postHTML;
+  });
+
+  attachRequestEvents();
+}
 
 async function loadPosts() {
   try {
     const res = await fetch("http://localhost:5000/api/food/all");
     const posts = await res.json();
 
-    // clear existing posts
-    feedContainer.innerHTML = "";
-
-    posts.forEach(post => {
-      const postHTML = `
-        <article class="rounded-[24px] border border-slate-200 bg-white p-6 shadow-soft">
-
-          <div class="flex items-center justify-between">
-            <div>
-              <h3 class="font-bold text-slate-900">
-                ${post.donor?.name || "Unknown"}
-              </h3>
-              <p class="text-sm text-slate-500">${post.category}</p>
-            </div>
-
-            <span class="text-green-600 text-sm font-semibold">
-              ${post.status}
-            </span>
-          </div>
-
-          <h2 class="mt-4 text-xl font-bold text-slate-900">
-            ${post.foodName}
-          </h2>
-
-          <p class="mt-2 text-slate-600">
-            ${post.description}
-          </p>
-
-          <div class="mt-4 grid grid-cols-2 gap-2 text-sm text-slate-600">
-            <p><b>Quantity:</b> ${post.quantity}</p>
-            <p><b>Location:</b> ${post.location}</p>
-            <p><b>Expiry:</b> ${post.expiry}</p>
-          </div>
-
-        </article>
-      `;
-
-      feedContainer.innerHTML += postHTML;
-    });
-
+    renderPosts(posts);
   } catch (error) {
     console.error("Feed loading error:", error);
   }
 }
 
 loadPosts();
+
+function attachRequestEvents() {
+  document.querySelectorAll(".request-food-btn").forEach((button) => {
+    button.addEventListener("click", () => {
+      const postId = button.dataset.postId;
+      window.location.href = `request_food.html?postId=${postId}`;
+    });
+  });
+}
+
+const searchBtn = document.getElementById("searchBtn");
+const searchQuery = document.getElementById("searchQuery");
+const searchCategory = document.getElementById("searchCategory");
+const searchArea = document.getElementById("searchArea");
+const searchCity = document.getElementById("searchCity");
+
+async function searchPosts() {
+  const query = searchQuery.value.trim();
+  const category = searchCategory.value;
+  const area = searchArea.value.trim();
+  const city = searchCity.value.trim();
+
+  const params = new URLSearchParams();
+
+  if (query) params.append("query", query);
+  if (category) params.append("category", category);
+  if (area) params.append("area", area);
+  if (city) params.append("city", city);
+
+  try {
+    const res = await fetch(`http://localhost:5000/api/food/search?${params.toString()}`);
+    const posts = await res.json();
+
+    renderPosts(posts);
+  } catch (error) {
+    console.error("Search error:", error);
+  }
+}
+
+if (searchBtn) {
+  searchBtn.addEventListener("click", searchPosts);
+}

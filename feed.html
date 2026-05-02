@@ -138,10 +138,22 @@
               Create Food Post
             </a>
             <a
+              href="donor_requests.html"
+              class="donor-only block rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-100"
+            >
+              Incoming Requests
+            </a>
+            <a
               href="available_food.html"
               class="block rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-100"
             >
               Browse Listings
+            </a>
+            <a
+              href="my_requests.html"
+              class="block rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-100"
+            >
+              My Requests
             </a>
           </div>
         </div>
@@ -149,6 +161,55 @@
 
       <!-- Center Feed -->
       <section class="space-y-6">
+        <div
+          class="rounded-[24px] border border-slate-200 bg-white p-5 shadow-soft"
+        >
+          <h2 class="text-lg font-bold text-slate-900">Search Food Posts</h2>
+
+          <div class="mt-4 grid gap-3 md:grid-cols-4">
+            <input
+              id="searchQuery"
+              type="text"
+              placeholder="Search food or donor..."
+              class="rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+            />
+
+            <select
+              id="searchCategory"
+              class="rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+            >
+              <option value="">All Categories</option>
+              <option value="Cooked Food">Cooked Food</option>
+              <option value="Raw Food">Raw Food</option>
+              <option value="Packaged Food">Packaged Food</option>
+              <option value="Fruits/Vegetables">Fruits/Vegetables</option>
+              <option value="Bakery">Bakery</option>
+              <option value="Other">Other</option>
+            </select>
+
+            <input
+              id="searchArea"
+              type="text"
+              placeholder="Area"
+              class="rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+            />
+
+            <input
+              id="searchCity"
+              type="text"
+              placeholder="City"
+              class="rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+            />
+          </div>
+
+          <button
+            id="searchBtn"
+            class="mt-4 rounded-2xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white hover:bg-brand-700"
+          >
+            Search
+          </button>
+        </div>
+        <div id="postsContainer" class="space-y-6"></div>
         <!-- Create Post Box -->
         <div
           class="rounded-[24px] border border-slate-200 bg-white p-5 shadow-soft"

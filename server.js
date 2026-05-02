@@ -1,3 +1,4 @@
+const requestRoutes = require("./routes/requestRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const foodRoutes = require("./routes/foodRoutes");
 const authRoutes = require("./routes/authRoutes");
@@ -13,8 +14,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/api/admin", adminRoutes);
-
+app.use("/api/auth", authRoutes);
 app.use("/api/food", foodRoutes);
+app.use("/api/request", requestRoutes);
 
 app.get("/", (req, res) => {
   res.send("FeedForward backend is running");
@@ -29,4 +31,3 @@ mongoose
     });
   })
   .catch((err) => console.log(err));
-app.use("/api/auth", authRoutes);

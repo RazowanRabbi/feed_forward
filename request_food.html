@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Request Food</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-6">
+
+  <div class="w-full max-w-2xl bg-white p-6 rounded-2xl shadow-lg">
+
+    <h1 class="text-2xl font-bold text-slate-900">Request Food</h1>
+
+    <!-- Food Details -->
+    <div id="foodDetails" class="mt-4 p-4 bg-slate-50 rounded-xl">
+      Loading food details...
+    </div>
+
+    <!-- Request Form -->
+    <form id="requestForm" class="mt-6 space-y-4">
+
+      <div>
+        <label class="text-sm font-semibold">Requested Quantity</label>
+        <input id="requestedQuantity" class="w-full border rounded-lg px-3 py-2 mt-1" required />
+      </div>
+
+      <div>
+        <label class="text-sm font-semibold">Message to Donor</label>
+        <textarea id="message" class="w-full border rounded-lg px-3 py-2 mt-1"></textarea>
+      </div>
+
+      <div>
+        <label class="text-sm font-semibold">Pickup Preference</label>
+        <input id="pickupPreference" class="w-full border rounded-lg px-3 py-2 mt-1" />
+      </div>
+
+      <button class="w-full bg-green-600 text-white py-3 rounded-lg font-semibold">
+        Send Request
+      </button>
+
+    </form>
+
+  </div>
+
+  <script src="js/requestFood.js"></script>
+
+</body>
+</html>
