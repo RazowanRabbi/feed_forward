@@ -267,3 +267,75 @@ async function searchPosts() {
 if (searchBtn) {
   searchBtn.addEventListener("click", searchPosts);
 }
+
+const unreadBadge = document.getElementById("unreadBadge");
+
+const incomingUnreadBadge = document.getElementById("incomingUnreadBadge");
+const myRequestsUnreadBadge = document.getElementById("myRequestsUnreadBadge");
+
+async function loadUnreadCount() {
+  try {
+    const currentUser = JSON.parse(localStorage.getItem("user"));
+
+    const res = await fetch(
+      `http://localhost:5000/api/messages/unread/${currentUser._id}`
+    );
+
+    const data = await res.json();
+
+    if (data.unread > 0) {
+      // donor incoming requests badge
+      if (currentUser.role === "donor" && incomingUnreadBadge) {
+        incomingUnreadBadge.classList.remove("hidden");
+        incomingUnreadBadge.textContent = data.unread;
+      }
+
+      // receiver + donor my requests badge
+      if (myRequestsUnreadBadge) {
+        myRequestsUnreadBadge.classList.remove("hidden");
+        myRequestsUnreadBadge.textContent = data.unread;
+      }
+    } else {
+      if (incomingUnreadBadge) {
+        incomingUnreadBadge.classList.add("hidden");
+      }
+
+      if (myRequestsUnreadBadge) {
+        myRequestsUnreadBadge.classList.add("hidden");
+      }
+    }
+  } catch (error) {
+    console.error("Unread count error:", error);
+  }
+}
+
+loadUnreadCount();
+
+const donorRequestLinks = document.querySelectorAll(".donor-request-only");
+
+donorRequestLinks.forEach((link) => {
+  link.addEventListener("click", (e) => {
+    const currentUser = JSON.parse(localStorage.getItem("user"));
+
+    if (!currentUser || currentUser.role !== "donor") {
+      e.preventDefault();
+      alert("Only approved donors can view incoming food requests.");
+      return;
+    }
+  });
+});
+
+
+const donorMenuItems = document.querySelectorAll(".donor-menu");
+
+function updateRoleBasedSidebar() {
+  const currentUser = JSON.parse(localStorage.getItem("user"));
+
+  if (currentUser && currentUser.role === "donor") {
+    donorMenuItems.forEach((item) => item.classList.remove("hidden"));
+  } else {
+    donorMenuItems.forEach((item) => item.classList.add("hidden"));
+  }
+}
+
+updateRoleBasedSidebar();

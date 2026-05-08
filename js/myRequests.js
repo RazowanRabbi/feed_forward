@@ -9,7 +9,7 @@ const container = document.getElementById("requestsContainer");
 async function loadRequests() {
   try {
     const res = await fetch(
-      `http://localhost:5000/api/request/my-requests/${user._id}`
+      `http://localhost:5000/api/request/my-requests/${user._id}`,
     );
 
     const requests = await res.json();
@@ -33,8 +33,28 @@ async function loadRequests() {
         <p><b>Message:</b> ${req.message || "None"}</p>
 
         <p class="mt-2 font-semibold">
-          Status: ${req.status}
-        </p>
+  Status:
+  ${
+    req.status === "pending"
+      ? `<span class="text-yellow-600">Pending ⏳</span>`
+      : req.status === "accepted"
+        ? `<span class="text-green-600">Accepted ✅</span>`
+        : `<span class="text-red-600">Rejected ❌</span>`
+  }
+</p>
+
+${
+  req.status === "accepted"
+    ? `
+      <a
+        href="chat.html?requestId=${req._id}&receiverId=${req.donor._id}"
+        class="mt-4 inline-block rounded-xl bg-green-600 px-4 py-2 text-white font-semibold"
+      >
+        Contact Donor
+      </a>
+    `
+    : ""
+}
       `;
 
       container.appendChild(card);

@@ -58,6 +58,19 @@ async function loadDonorRequests() {
     `
               : ""
           }
+
+          ${
+            req.status === "accepted"
+              ? `
+      <a
+        href="chat.html?requestId=${req._id}&receiverId=${req.requester._id}"
+        class="mt-4 inline-block rounded-xl bg-green-600 px-4 py-2 text-white font-semibold"
+      >
+        Chat with Requester
+      </a>
+    `
+              : ""
+          }
         </div>
       `;
 
@@ -77,9 +90,12 @@ function attachRequestActions() {
     button.addEventListener("click", async () => {
       const id = button.dataset.id;
 
-      const res = await fetch(`http://localhost:5000/api/request/accept/${id}`, {
-        method: "PUT"
-      });
+      const res = await fetch(
+        `http://localhost:5000/api/request/accept/${id}`,
+        {
+          method: "PUT",
+        },
+      );
 
       const data = await res.json();
 
@@ -96,9 +112,12 @@ function attachRequestActions() {
     button.addEventListener("click", async () => {
       const id = button.dataset.id;
 
-      const res = await fetch(`http://localhost:5000/api/request/reject/${id}`, {
-        method: "PUT"
-      });
+      const res = await fetch(
+        `http://localhost:5000/api/request/reject/${id}`,
+        {
+          method: "PUT",
+        },
+      );
 
       const data = await res.json();
 

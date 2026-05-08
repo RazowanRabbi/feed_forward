@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat | FeedForward</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-slate-100">
+  <div class="mx-auto flex h-screen max-w-4xl flex-col bg-white shadow-lg">
+
+    <header class="flex items-center justify-between border-b px-5 py-4">
+      <div>
+        <h1 class="text-lg font-bold text-slate-900">FeedForward Chat</h1>
+        <p id="chatSubtitle" class="text-sm text-slate-500">Loading conversation...</p>
+      </div>
+
+      <a href="feed.html" class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white">
+        Back
+      </a>
+    </header>
+
+    <main id="messagesBox" class="flex-1 space-y-3 overflow-y-auto bg-slate-50 p-5">
+      <p class="text-center text-sm text-slate-400">Loading messages...</p>
+    </main>
+
+    <form id="chatForm" class="flex gap-3 border-t bg-white p-4">
+      <input
+        id="messageInput"
+        type="text"
+        placeholder="Write a message..."
+        class="flex-1 rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-green-600"
+        autocomplete="off"
+        required
+      />
+
+      <button
+        class="rounded-2xl bg-green-600 px-6 py-3 text-sm font-semibold text-white hover:bg-green-700"
+      >
+        Send
+      </button>
+    </form>
+
+  </div>
+
+  <script src="http://localhost:5000/socket.io/socket.io.js"></script>
+  <script src="js/chat.js"></script>
+</body>
+</html>
