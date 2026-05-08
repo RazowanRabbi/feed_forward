@@ -166,6 +166,9 @@ function renderPosts(posts) {
   }
 
   posts.forEach((post) => {
+    if (user.role === "donor" && post.donor?._id === user._id) {
+      return;
+    }
     const postHTML = `
       <article class="rounded-[24px] border border-slate-200 bg-white p-6 shadow-soft">
         <div class="flex items-center justify-between">
@@ -180,6 +183,18 @@ function renderPosts(posts) {
             ${post.status}
           </span>
         </div>
+
+        ${
+          post.foodImage
+            ? `
+      <img
+        src="${post.foodImage}"
+        alt="${post.foodName}"
+        class="mt-4 h-64 w-full rounded-2xl object-cover"
+      />
+    `
+            : ""
+        }
 
         <h2 class="mt-4 text-xl font-bold text-slate-900">
           ${post.foodName}
@@ -196,13 +211,25 @@ function renderPosts(posts) {
         </div>
 
         <div class="mt-5">
-          <button
-            class="request-food-btn rounded-2xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700"
-            data-post-id="${post._id}"
-            data-donor-id="${post.donor?._id}"
-          >
-            Request Food
-          </button>
+          ${
+            user.role !== "admin"
+              ? `
+      <div class="mt-5">
+        <button
+          class="request-food-btn rounded-2xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700"
+          data-post-id="${post._id}"
+          data-donor-id="${post.donor?._id}"
+        >
+          Request Food
+        </button>
+      </div>
+    `
+              : `
+      <div class="mt-5 rounded-2xl bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-600">
+        Admin view only
+      </div>
+    `
+          }
         </div>
       </article>
     `;
@@ -255,7 +282,9 @@ async function searchPosts() {
   if (city) params.append("city", city);
 
   try {
-    const res = await fetch(`http://localhost:5000/api/food/search?${params.toString()}`);
+    const res = await fetch(
+      `http://localhost:5000/api/food/search?${params.toString()}`,
+    );
     const posts = await res.json();
 
     renderPosts(posts);
@@ -278,7 +307,7 @@ async function loadUnreadCount() {
     const currentUser = JSON.parse(localStorage.getItem("user"));
 
     const res = await fetch(
-      `http://localhost:5000/api/messages/unread/${currentUser._id}`
+      `http://localhost:5000/api/messages/unread/${currentUser._id}`,
     );
 
     const data = await res.json();
@@ -325,7 +354,6 @@ donorRequestLinks.forEach((link) => {
   });
 });
 
-
 const donorMenuItems = document.querySelectorAll(".donor-menu");
 
 function updateRoleBasedSidebar() {
@@ -339,3 +367,15 @@ function updateRoleBasedSidebar() {
 }
 
 updateRoleBasedSidebar();
+
+const adminDashboardBtn = document.getElementById("adminDashboardBtn");
+
+function updateAdminControls() {
+  const currentUser = JSON.parse(localStorage.getItem("user"));
+
+  if (currentUser && currentUser.role === "admin" && adminDashboardBtn) {
+    adminDashboardBtn.classList.remove("hidden");
+  }
+}
+
+updateAdminControls();

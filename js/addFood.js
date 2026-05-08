@@ -14,36 +14,31 @@ if (user.donorStatus !== "approved") {
 foodPostForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const foodName = document.getElementById("foodName").value.trim();
-  const quantity = document.getElementById("quantity").value.trim();
-  const category = document.getElementById("category").value;
-  const description = document.getElementById("description").value.trim();
-  const expiryDateTime = document.getElementById("expiryDateTime").value;
-  const pickupAddress = document.getElementById("pickupAddress").value.trim();
-  const area = document.getElementById("area").value.trim();
-  const city = document.getElementById("city").value.trim();
-  const foodImage = document.getElementById("foodImage").value.trim();
+  const formData = new FormData();
+
+  formData.append("donor", user._id);
+  formData.append("foodName", document.getElementById("foodName").value.trim());
+  formData.append("quantity", document.getElementById("quantity").value.trim());
+  formData.append("category", document.getElementById("category").value);
+  formData.append("description", document.getElementById("description").value.trim());
+  formData.append("expiryDateTime", document.getElementById("expiryDateTime").value);
+  formData.append("pickupAddress", document.getElementById("pickupAddress").value.trim());
+  formData.append("area", document.getElementById("area").value.trim());
+  formData.append("city", document.getElementById("city").value.trim());
+
+  formData.append("latitude", "");
+  formData.append("longitude", "");
+
+  const imageFile = document.getElementById("foodImage").files[0];
+
+  if (imageFile) {
+    formData.append("foodImage", imageFile);
+  }
 
   try {
     const res = await fetch("http://localhost:5000/api/food/create", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        donor: user._id,
-        foodName,
-        quantity,
-        category,
-        description,
-        expiryDateTime,
-        pickupAddress,
-        area,
-        city,
-        latitude: null,
-        longitude: null,
-        foodImage
-      })
+      body: formData
     });
 
     const data = await res.json();

@@ -21,6 +21,18 @@ async function loadFood() {
     donorId = post.donor._id;
 
     foodDetails.innerHTML = `
+    ${
+      post.foodImage
+        ? `
+      <img
+        src="${post.foodImage}"
+        alt="${post.foodName}"
+        class="mb-4 h-64 w-full rounded-2xl object-cover"
+      />
+    `
+        : ""
+    }
+
       <h2 class="text-xl font-bold">${post.foodName}</h2>
       <p class="text-sm text-gray-500">Donor: ${post.donor.name}</p>
       <p class="mt-2">${post.description}</p>

@@ -1,10 +1,25 @@
+const multer = require("multer");
+const path = require("path");
 const express = require("express");
-const router = express.Router();
 const FoodPost = require("../models/FoodPost");
+const router = express.Router();
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ storage });
+
+
+
 
 // Create a new food post
-// Create a new food post
-router.post("/create", async (req, res) => {
+router.post("/create", upload.single("foodImage"), async (req, res) => {
   try {
     const {
       donor,
@@ -17,8 +32,7 @@ router.post("/create", async (req, res) => {
       area,
       city,
       latitude,
-      longitude,
-      foodImage
+      longitude
     } = req.body;
 
     const post = new FoodPost({
@@ -31,9 +45,12 @@ router.post("/create", async (req, res) => {
       pickupAddress,
       area,
       city,
-      latitude,
-      longitude,
-      foodImage
+      latitude: latitude || null,
+      longitude: longitude || null,
+      foodImage: req.file
+        ? `http://localhost:5000/uploads/${req.file.filename}`
+        : "",
+      approvalStatus: "pending"
     });
 
     await post.save();
