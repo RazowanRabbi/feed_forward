@@ -15,6 +15,7 @@
               brand: {
                 50: "#f0fdf4",
                 100: "#dcfce7",
+                200: "#bbf7d0",
                 500: "#22c55e",
                 600: "#16a34a",
                 700: "#15803d",
@@ -22,138 +23,269 @@
               },
             },
             boxShadow: {
-              soft: "0 10px 30px rgba(15, 23, 42, 0.08)",
+              soft: "0 14px 40px rgba(15, 23, 42, 0.10)",
+              glow: "0 20px 60px rgba(34, 197, 94, 0.22)",
+            },
+            animation: {
+              float: "float 5s ease-in-out infinite",
+              fadeUp: "fadeUp 0.7s ease both",
+              pulseSoft: "pulseSoft 2.5s ease-in-out infinite",
+              shimmer: "shimmer 2.4s linear infinite",
+            },
+            keyframes: {
+              float: {
+                "0%, 100%": { transform: "translateY(0)" },
+                "50%": { transform: "translateY(-10px)" },
+              },
+              fadeUp: {
+                "0%": { opacity: "0", transform: "translateY(20px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" },
+              },
+              pulseSoft: {
+                "0%, 100%": { transform: "scale(1)", opacity: "1" },
+                "50%": { transform: "scale(1.04)", opacity: "0.85" },
+              },
+              shimmer: {
+                "0%": { backgroundPosition: "-700px 0" },
+                "100%": { backgroundPosition: "700px 0" },
+              },
             },
           },
         },
       };
     </script>
 
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      body::-webkit-scrollbar-track {
+        background: #f1f5f9;
+      }
+
+      body::-webkit-scrollbar-thumb {
+        background: #86efac;
+        border-radius: 999px;
+      }
+
+      body::-webkit-scrollbar-thumb:hover {
+        background: #16a34a;
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.82);
+        backdrop-filter: blur(18px);
+      }
+
+      .animated-border {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .animated-border::before {
+        content: "";
+        position: absolute;
+        inset: -2px;
+        background: linear-gradient(
+          120deg,
+          transparent,
+          rgba(34, 197, 94, 0.35),
+          transparent
+        );
+        transform: translateX(-100%);
+        transition: transform 0.8s ease;
+      }
+
+      .animated-border:hover::before {
+        transform: translateX(100%);
+      }
+
+      .animated-border > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .soft-grid {
+        background-image:
+          radial-gradient(
+            circle at 20% 20%,
+            rgba(34, 197, 94, 0.12),
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at 80% 0%,
+            rgba(20, 83, 45, 0.1),
+            transparent 26%
+          ),
+          radial-gradient(
+            circle at 50% 100%,
+            rgba(34, 197, 94, 0.1),
+            transparent 30%
+          );
+      }
+    </style>
+
     <link rel="stylesheet" href="css/style.css" />
   </head>
 
-  <body class="min-h-screen bg-slate-50 text-slate-800">
+  <body class="soft-grid min-h-screen bg-slate-50 text-slate-800">
+    <!-- Background Decorations -->
+    <div class="pointer-events-none fixed inset-0 overflow-hidden">
+      <div
+        class="absolute left-8 top-32 h-40 w-40 animate-float rounded-full bg-brand-200/40 blur-3xl"
+      ></div>
+      <div
+        class="absolute right-10 top-64 h-52 w-52 animate-pulseSoft rounded-full bg-brand-500/10 blur-3xl"
+      ></div>
+      <div
+        class="absolute bottom-10 left-1/3 h-56 w-56 animate-float rounded-full bg-emerald-300/20 blur-3xl"
+      ></div>
+    </div>
+
     <!-- Navbar -->
     <header
-      class="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur"
+      class="sticky top-0 z-50 border-b border-white/70 bg-white/80 backdrop-blur-xl"
     >
       <div
-        class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4"
+        class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6"
       >
-        <a href="feed.html" class="flex items-center gap-3">
+        <a href="feed.html" class="group flex items-center gap-3">
           <div
-            class="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-600 text-lg font-bold text-white shadow-soft"
+            class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-lg font-black text-white shadow-glow transition group-hover:rotate-6 group-hover:scale-105"
           >
             F
           </div>
+
           <div>
-            <h1 class="text-xl font-bold text-slate-900">FeedForward</h1>
-            <p class="text-xs text-slate-500">Community food sharing feed</p>
+            <h1 class="text-xl font-black tracking-tight text-slate-950">
+              FeedForward
+            </h1>
+            <p class="hidden text-xs font-medium text-slate-500 sm:block">
+              Share food. Reduce waste. Help nearby.
+            </p>
           </div>
         </a>
 
-        <nav
-          class="hidden items-center gap-6 text-sm font-semibold text-slate-600 md:flex"
-        >
-          <a href="feed.html" class="text-brand-700">Feed</a>
-          <a href="add_food.html" class="hover:text-brand-700">Add Food</a>
-          <a href="available_food.html" class="hover:text-brand-700"
-            >Available Food</a
+        <div class="flex items-center gap-3">
+          <a
+            id="adminDashboardBtn"
+            href="admin_dashboard.html"
+            class="hidden rounded-2xl bg-brand-600 px-4 py-2 text-sm font-bold text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-brand-700"
           >
-          <a href="donor_dashboard.html" class="hover:text-brand-700"
-            >Dashboard</a
-          >
-        </nav>
-        <a
-          id="adminDashboardBtn"
-          href="admin_dashboard.html"
-          class="hidden rounded-2xl bg-brand-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-brand-700"
-        >
-          Admin Dashboard
-        </a>
+            Admin
+          </a>
 
-        <button
-          id="logoutBtn"
-          class="rounded-2xl bg-slate-900 px-5 py-2 text-sm font-semibold text-white transition hover:bg-brand-700"
-        >
-          Logout
-        </button>
+          <button
+            id="logoutBtn"
+            class="rounded-2xl bg-slate-950 px-4 py-2 text-sm font-bold text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-brand-700"
+          >
+            Logout
+          </button>
+        </div>
       </div>
     </header>
 
     <main
-      class="mx-auto grid max-w-7xl gap-6 px-6 py-8 lg:grid-cols-[260px_1fr_300px]"
+      class="relative z-10 mx-auto grid max-w-7xl gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[285px_minmax(0,1fr)_320px]"
     >
       <!-- Left Sidebar -->
       <aside class="hidden lg:block">
         <div
-          class="rounded-[24px] border border-slate-200 bg-white p-5 shadow-soft"
+          class="glass-card sticky top-24 max-h-[calc(100vh-120px)] overflow-y-auto rounded-[32px] border border-white/80 p-5 shadow-soft"
         >
-          <h2 class="text-lg font-bold text-slate-900">Welcome</h2>
+          <div class="flex items-center justify-between">
+            <h2 class="text-lg font-black text-slate-950">Profile</h2>
+            <span
+              class="rounded-full bg-brand-100 px-3 py-1 text-xs font-bold text-brand-700"
+            >
+              Online
+            </span>
+          </div>
 
-          <!-- 🔥 PASTE HERE -->
-          <div class="mt-4 rounded-2xl bg-slate-50 p-4 text-center">
-            <img
-              id="profileImage"
-              src="https://via.placeholder.com/100"
-              class="mx-auto h-20 w-20 rounded-full border border-slate-200 object-cover"
-            />
+          <div
+            class="mt-4 rounded-[28px] border border-slate-100 bg-white/80 p-4 text-center shadow-sm"
+          >
+            <div class="relative mx-auto h-24 w-24">
+              <img
+                id="profileImage"
+                src="https://via.placeholder.com/100"
+                class="h-24 w-24 rounded-full border-4 border-white object-cover shadow-soft"
+              />
+              <span
+                class="absolute bottom-2 right-2 h-4 w-4 rounded-full border-2 border-white bg-brand-500"
+              ></span>
+            </div>
 
-            <h3 id="userName" class="mt-3 text-lg font-bold text-slate-900">
+            <h3 id="userName" class="mt-3 text-lg font-black text-slate-950">
               Loading...
             </h3>
 
-            <p id="userEmail" class="mt-1 text-xs text-slate-500"></p>
+            <p
+              id="userEmail"
+              class="mt-1 break-words text-xs font-medium text-slate-500"
+            ></p>
 
             <div class="mt-4 space-y-2 text-left text-sm text-slate-600">
-              <p>
-                <span class="font-semibold text-slate-800">Phone:</span>
+              <p class="rounded-2xl bg-slate-50 px-3 py-2">
+                <span class="font-bold text-slate-900">Phone:</span>
                 <span id="userPhone">Loading...</span>
               </p>
-              <p>
-                <span class="font-semibold text-slate-800">Location:</span>
+
+              <p class="rounded-2xl bg-slate-50 px-3 py-2">
+                <span class="font-bold text-slate-900">Location:</span>
                 <span id="userLocation">Loading...</span>
               </p>
-              <p>
-                <span class="font-semibold text-slate-800">Role:</span>
+
+              <p class="rounded-2xl bg-slate-50 px-3 py-2">
+                <span class="font-bold text-slate-900">Role:</span>
                 <span id="userRole">Loading...</span>
               </p>
-              <p>
-                <span class="font-semibold text-slate-800">Donor:</span>
+
+              <p class="rounded-2xl bg-slate-50 px-3 py-2">
+                <span class="font-bold text-slate-900">Donor:</span>
                 <span id="donorStatus">Loading...</span>
               </p>
             </div>
 
             <a
               href="profile.html"
-              class="mt-5 block rounded-2xl bg-brand-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-brand-700"
+              class="mt-5 block rounded-2xl bg-brand-600 px-4 py-3 text-sm font-bold text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-brand-700"
             >
               Edit Profile
             </a>
           </div>
-          <div class="mt-5 space-y-3">
+
+          <nav class="mt-5 space-y-2">
             <a
               href="feed.html"
-              class="block rounded-2xl bg-brand-50 px-4 py-3 text-sm font-semibold text-brand-700"
+              class="flex items-center justify-between rounded-2xl bg-brand-50 px-4 py-3 text-sm font-black text-brand-700"
             >
-              Home Feed
+              <span>Home Feed</span>
+              <span>●</span>
             </a>
+
             <a
               href="add_food.html"
-              class="donor-only rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-100"
+              class="donor-only block rounded-2xl px-4 py-3 text-sm font-bold text-slate-600 transition hover:bg-white hover:text-brand-700 hover:shadow-sm"
             >
               Create Food Post
             </a>
 
             <a
               href="my_posts.html"
-              class="donor-menu hidden block rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-100"
+              class="donor-menu hidden block rounded-2xl px-4 py-3 text-sm font-bold text-slate-600 transition hover:bg-white hover:text-brand-700 hover:shadow-sm"
             >
               My Posts
             </a>
+
             <a
               href="donor_requests.html"
-              class="donor-menu hidden block rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-100"
+              class="donor-menu hidden block rounded-2xl px-4 py-3 text-sm font-bold text-slate-600 transition hover:bg-white hover:text-brand-700 hover:shadow-sm"
             >
               Incoming Requests
               <span
@@ -163,15 +295,10 @@
                 0
               </span>
             </a>
-            <a
-              href="available_food.html"
-              class="block rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-100"
-            >
-              Browse Listings
-            </a>
+
             <a
               href="my_requests.html"
-              class="block rounded-2xl px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-100"
+              class="block rounded-2xl px-4 py-3 text-sm font-bold text-slate-600 transition hover:bg-white hover:text-brand-700 hover:shadow-sm"
             >
               My Requests
               <span
@@ -181,28 +308,120 @@
                 0
               </span>
             </a>
-          </div>
+          </nav>
         </div>
       </aside>
 
       <!-- Center Feed -->
       <section class="space-y-6">
+        <!-- Hero -->
         <div
-          class="rounded-[24px] border border-slate-200 bg-white p-5 shadow-soft"
+          class="animated-border animate-fadeUp rounded-[34px] border border-white/80 bg-gradient-to-br from-brand-600 via-brand-600 to-brand-900 p-[1px] shadow-glow"
         >
-          <h2 class="text-lg font-bold text-slate-900">Search Food Posts</h2>
+          <div
+            class="rounded-[34px] bg-gradient-to-br from-brand-600 to-brand-900 p-6 text-white sm:p-8"
+          >
+            <div
+              class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between"
+            >
+              <div>
+                <span
+                  class="rounded-full bg-white/15 px-4 py-2 text-xs font-bold uppercase tracking-wide text-brand-50"
+                >
+                  Community Feed
+                </span>
 
-          <div class="mt-4 grid gap-3 md:grid-cols-4">
+                <h2
+                  class="mt-5 max-w-xl text-3xl font-black tracking-tight sm:text-4xl"
+                >
+                  Find fresh food shared by people around you.
+                </h2>
+
+                <p class="mt-3 max-w-2xl text-sm leading-6 text-brand-50/90">
+                  Browse available posts, request food, and coordinate pickup
+                  quickly with donors after approval.
+                </p>
+              </div>
+
+              <div
+                class="hidden h-28 w-28 animate-float items-center justify-center rounded-[32px] bg-white/15 text-5xl shadow-soft backdrop-blur sm:flex"
+              >
+                🍲
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div
+          class="glass-card rounded-[28px] border border-white/80 p-4 shadow-soft lg:hidden"
+        >
+          <div class="grid grid-cols-2 gap-3 text-center text-sm font-bold">
+            <a
+              href="feed.html"
+              class="rounded-2xl bg-brand-600 px-4 py-3 text-white shadow-soft"
+            >
+              Feed
+            </a>
+
+            <a
+              href="my_requests.html"
+              class="rounded-2xl bg-white px-4 py-3 text-slate-700 shadow-sm"
+            >
+              My Requests
+            </a>
+
+            <a
+              href="add_food.html"
+              class="donor-only rounded-2xl bg-white px-4 py-3 text-slate-700 shadow-sm"
+            >
+              Add Food
+            </a>
+
+            <a
+              href="my_posts.html"
+              class="donor-menu hidden rounded-2xl bg-white px-4 py-3 text-slate-700 shadow-sm"
+            >
+              My Posts
+            </a>
+          </div>
+        </div>
+
+        <!-- Search Box -->
+        <div
+          class="glass-card animate-fadeUp rounded-[32px] border border-white/80 p-5 shadow-soft"
+          style="animation-delay: 0.08s"
+        >
+          <div
+            class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+          >
+            <div>
+              <h2 class="text-2xl font-black tracking-tight text-slate-950">
+                Search available food
+              </h2>
+              <p class="mt-1 text-sm font-medium text-slate-500">
+                Filter by name, category, area, or city.
+              </p>
+            </div>
+
+            <span
+              class="w-fit animate-pulseSoft rounded-full bg-brand-100 px-4 py-2 text-xs font-black text-brand-700"
+            >
+              Live available posts
+            </span>
+          </div>
+
+          <div class="mt-5 grid gap-3 md:grid-cols-4">
             <input
               id="searchQuery"
               type="text"
               placeholder="Search food or donor..."
-              class="rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+              class="rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 text-sm font-medium outline-none transition focus:border-brand-600 focus:bg-white focus:ring-4 focus:ring-brand-100"
             />
 
             <select
               id="searchCategory"
-              class="rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+              class="rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 text-sm font-medium outline-none transition focus:border-brand-600 focus:bg-white focus:ring-4 focus:ring-brand-100"
             >
               <option value="">All Categories</option>
               <option value="Cooked Food">Cooked Food</option>
@@ -217,36 +436,65 @@
               id="searchArea"
               type="text"
               placeholder="Area"
-              class="rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+              class="rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 text-sm font-medium outline-none transition focus:border-brand-600 focus:bg-white focus:ring-4 focus:ring-brand-100"
             />
 
             <input
               id="searchCity"
               type="text"
               placeholder="City"
-              class="rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
+              class="rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 text-sm font-medium outline-none transition focus:border-brand-600 focus:bg-white focus:ring-4 focus:ring-brand-100"
             />
           </div>
 
-          <button
-            id="searchBtn"
-            class="mt-4 rounded-2xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white hover:bg-brand-700"
-          >
-            Search
-          </button>
+          <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <button
+              id="searchBtn"
+              class="rounded-2xl bg-brand-600 px-6 py-3 text-sm font-black text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-glow"
+            >
+              Search Food
+            </button>
+
+            <p class="text-xs font-medium text-slate-500">
+              Tip: Try searching by your nearby area first.
+            </p>
+          </div>
         </div>
-        <div id="postsContainer" class="space-y-6"></div>
+
+        <!-- Posts -->
+        <div
+          id="postsContainer"
+          class="grid max-h-none gap-5 scroll-smooth"
+        ></div>
+
         <!-- Create Post Box -->
         <div
-          class="rounded-[24px] border border-slate-200 bg-white p-5 shadow-soft"
+          class="glass-card rounded-[32px] border border-dashed border-brand-300 p-5 shadow-soft transition hover:-translate-y-1 hover:shadow-glow"
         >
-          <div class="flex items-center gap-4">
-            <div
-              class="flex h-12 w-12 items-center justify-center rounded-full bg-brand-100 font-bold text-brand-700"
-            >
-              F
+          <div
+            class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+          >
+            <div class="flex items-center gap-4">
+              <div
+                class="flex h-14 w-14 animate-pulseSoft items-center justify-center rounded-3xl bg-brand-600 text-2xl font-black text-white shadow-glow"
+              >
+                +
+              </div>
+
+              <div>
+                <h3 class="text-lg font-black text-slate-950">
+                  Have extra food?
+                </h3>
+                <p class="text-sm font-medium text-slate-500">
+                  Share it with someone nearby and reduce waste.
+                </p>
+              </div>
             </div>
-            <a href="add_food.html" class="donor-only hover:text-brand-700">
+
+            <a
+              href="add_food.html"
+              class="donor-only rounded-2xl bg-slate-950 px-6 py-3 text-center text-sm font-black text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-brand-700"
+            >
               Add Food
             </a>
           </div>
@@ -254,31 +502,109 @@
       </section>
 
       <!-- Right Sidebar -->
-      <aside class="hidden xl:block">
+      <aside class="hidden lg:block">
         <div
-          class="rounded-[24px] border border-slate-200 bg-white p-5 shadow-soft"
+          class="glass-card sticky top-24 max-h-[calc(100vh-120px)] overflow-y-auto rounded-[32px] border border-white/80 p-5 shadow-soft"
         >
-          <h2 class="text-lg font-bold text-slate-900">Community Impact</h2>
+          <div>
+            <h2 class="text-lg font-black text-slate-950">Impact Panel</h2>
+            <p class="mt-1 text-sm font-medium text-slate-500">
+              Small actions create real community impact.
+            </p>
+          </div>
 
-          <div class="mt-5 space-y-3">
-            <div class="rounded-2xl bg-brand-50 p-4">
-              <p class="text-2xl font-bold text-brand-700">55</p>
-              <p class="text-sm text-slate-600">Meals listed today</p>
+          <div class="mt-5 grid gap-3">
+            <div
+              class="rounded-[26px] bg-gradient-to-br from-brand-600 to-brand-900 p-5 text-white shadow-glow"
+            >
+              <p
+                class="text-xs font-bold uppercase tracking-wide text-brand-100"
+              >
+                Today’s goal
+              </p>
+              <h3 class="mt-2 text-2xl font-black">Share before waste</h3>
+              <p class="mt-2 text-sm leading-6 text-brand-50">
+                Request only what you can collect and consume safely.
+              </p>
             </div>
 
-            <div class="rounded-2xl bg-slate-50 p-4">
-              <p class="text-2xl font-bold text-slate-900">8</p>
-              <p class="text-sm text-slate-600">Active donors</p>
+            <div class="rounded-[26px] border border-slate-100 bg-white/80 p-4">
+              <div class="flex items-start gap-3">
+                <div
+                  class="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-100 text-lg"
+                >
+                  📍
+                </div>
+                <div>
+                  <h3 class="text-sm font-black text-slate-950">
+                    Check pickup details
+                  </h3>
+                  <p class="mt-1 text-xs leading-5 text-slate-500">
+                    Confirm area, time, quantity, and pickup preference before
+                    requesting.
+                  </p>
+                </div>
+              </div>
             </div>
 
-            <div class="rounded-2xl bg-slate-50 p-4">
-              <p class="text-2xl font-bold text-slate-900">12</p>
-              <p class="text-sm text-slate-600">Volunteer pickups</p>
+            <div class="rounded-[26px] border border-slate-100 bg-white/80 p-4">
+              <div class="flex items-start gap-3">
+                <div
+                  class="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-100 text-lg"
+                >
+                  💬
+                </div>
+                <div>
+                  <h3 class="text-sm font-black text-slate-950">
+                    Keep chat active
+                  </h3>
+                  <p class="mt-1 text-xs leading-5 text-slate-500">
+                    After acceptance, coordinate quickly with the donor.
+                  </p>
+                </div>
+              </div>
             </div>
+
+            <div class="rounded-[26px] border border-slate-100 bg-white/80 p-4">
+              <div class="flex items-start gap-3">
+                <div
+                  class="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-100 text-lg"
+                >
+                  🛡️
+                </div>
+                <div>
+                  <h3 class="text-sm font-black text-slate-950">
+                    Be respectful
+                  </h3>
+                  <p class="mt-1 text-xs leading-5 text-slate-500">
+                    Only request food when you genuinely need it and can pick it
+                    up.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="mt-5 rounded-[26px] bg-slate-950 p-5 text-white shadow-soft"
+          >
+            <h3 class="text-sm font-black">FeedForward reminder</h3>
+            <p class="mt-2 text-xs leading-5 text-slate-300">
+              Available posts disappear after request, assignment, or delivery
+              based on your current backend logic.
+            </p>
           </div>
         </div>
       </aside>
     </main>
+
+    <button
+      onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+      class="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-brand-600 text-xl font-black text-white shadow-glow transition hover:-translate-y-1 hover:bg-brand-700"
+      title="Back to top"
+    >
+      ↑
+    </button>
 
     <script src="js/feed.js"></script>
   </body>

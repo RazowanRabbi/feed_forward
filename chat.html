@@ -6,43 +6,172 @@
   <title>Chat | FeedForward</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: "#f0fdf4",
+              100: "#dcfce7",
+              500: "#22c55e",
+              600: "#16a34a",
+              700: "#15803d",
+              900: "#14532d",
+            },
+          },
+          boxShadow: {
+            soft: "0 14px 40px rgba(15, 23, 42, 0.10)",
+            glow: "0 20px 60px rgba(34, 197, 94, 0.22)",
+          },
+          animation: {
+            fadeUp: "fadeUp 0.5s ease both",
+            float: "float 5s ease-in-out infinite",
+            pulseSoft: "pulseSoft 2.5s ease-in-out infinite",
+          },
+          keyframes: {
+            fadeUp: {
+              "0%": { opacity: "0", transform: "translateY(16px)" },
+              "100%": { opacity: "1", transform: "translateY(0)" },
+            },
+            float: {
+              "0%, 100%": { transform: "translateY(0)" },
+              "50%": { transform: "translateY(-10px)" },
+            },
+            pulseSoft: {
+              "0%, 100%": { transform: "scale(1)", opacity: "1" },
+              "50%": { transform: "scale(1.04)", opacity: "0.85" },
+            },
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    #messagesBox::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    #messagesBox::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    #messagesBox::-webkit-scrollbar-thumb {
+      background: #bbf7d0;
+      border-radius: 999px;
+    }
+
+    #messagesBox::-webkit-scrollbar-thumb:hover {
+      background: #16a34a;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(18px);
+    }
+
+    .chat-bg {
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(34, 197, 94, 0.16), transparent 28%),
+        radial-gradient(circle at 80% 10%, rgba(20, 83, 45, 0.10), transparent 26%),
+        radial-gradient(circle at 50% 100%, rgba(34, 197, 94, 0.12), transparent 30%);
+    }
+  </style>
 </head>
 
-<body class="min-h-screen bg-slate-100">
-  <div class="mx-auto flex h-screen max-w-4xl flex-col bg-white shadow-lg">
+<body class="chat-bg min-h-screen overflow-hidden bg-slate-50 text-slate-800">
+  <!-- Background decoration -->
+  <div class="pointer-events-none fixed inset-0 overflow-hidden">
+    <div class="absolute left-8 top-24 h-48 w-48 animate-float rounded-full bg-brand-200/50 blur-3xl"></div>
+    <div class="absolute bottom-10 right-12 h-64 w-64 animate-pulseSoft rounded-full bg-brand-500/10 blur-3xl"></div>
+  </div>
 
-    <header class="flex items-center justify-between border-b px-5 py-4">
-      <div>
-        <h1 class="text-lg font-bold text-slate-900">FeedForward Chat</h1>
-        <p id="chatSubtitle" class="text-sm text-slate-500">Loading conversation...</p>
-      </div>
+  <div class="relative z-10 mx-auto flex h-screen max-w-5xl flex-col p-3 sm:p-5">
+    <div class="glass flex h-full flex-col overflow-hidden rounded-[32px] border border-white/80 shadow-soft">
+      
+      <!-- Header -->
+      <header class="border-b border-white/70 bg-white/75 px-4 py-4 backdrop-blur-xl sm:px-6">
+        <div class="flex items-center justify-between gap-4">
+          <div class="flex items-center gap-4">
+            <div class="relative">
+              <div class="flex h-13 w-13 items-center justify-center rounded-3xl bg-gradient-to-br from-brand-500 to-brand-700 p-3 text-xl font-black text-white shadow-glow">
+                💬
+              </div>
+              <span class="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-white bg-brand-500"></span>
+            </div>
 
-      <a href="feed.html" class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white">
-        Back
-      </a>
-    </header>
+            <div>
+              <h1 class="text-lg font-black tracking-tight text-slate-950 sm:text-xl">
+                FeedForward Chat
+              </h1>
+              <p id="chatSubtitle" class="text-xs font-medium text-slate-500 sm:text-sm">
+                Loading conversation...
+              </p>
+            </div>
+          </div>
 
-    <main id="messagesBox" class="flex-1 space-y-3 overflow-y-auto bg-slate-50 p-5">
-      <p class="text-center text-sm text-slate-400">Loading messages...</p>
-    </main>
+          <a
+            href="feed.html"
+            class="rounded-2xl bg-slate-950 px-4 py-2 text-sm font-bold text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-brand-700"
+          >
+            Back
+          </a>
+        </div>
+      </header>
 
-    <form id="chatForm" class="flex gap-3 border-t bg-white p-4">
-      <input
-        id="messageInput"
-        type="text"
-        placeholder="Write a message..."
-        class="flex-1 rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-green-600"
-        autocomplete="off"
-        required
-      />
-
-      <button
-        class="rounded-2xl bg-green-600 px-6 py-3 text-sm font-semibold text-white hover:bg-green-700"
+      <!-- Messages -->
+      <main
+        id="messagesBox"
+        class="flex-1 space-y-4 overflow-y-auto bg-gradient-to-b from-slate-50/90 to-white/70 p-4 sm:p-6"
       >
-        Send
-      </button>
-    </form>
+        <div class="flex h-full items-center justify-center">
+          <div class="rounded-3xl bg-white/80 px-6 py-5 text-center shadow-soft">
+            <div class="mx-auto mb-3 flex h-12 w-12 animate-pulseSoft items-center justify-center rounded-2xl bg-brand-100 text-xl">
+              🍲
+            </div>
+            <p class="text-sm font-semibold text-slate-500">
+              Loading messages...
+            </p>
+          </div>
+        </div>
+      </main>
 
+      <!-- Input -->
+      <form
+        id="chatForm"
+        class="border-t border-white/70 bg-white/85 p-4 backdrop-blur-xl"
+      >
+        <div class="flex items-end gap-3">
+          <div class="flex-1">
+            <label for="messageInput" class="sr-only">Write a message</label>
+            <input
+              id="messageInput"
+              type="text"
+              placeholder="Write a message..."
+              class="w-full rounded-3xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-medium text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-brand-600 focus:bg-white focus:ring-4 focus:ring-brand-100"
+              autocomplete="off"
+              required
+            />
+          </div>
+
+          <button
+            class="rounded-3xl bg-brand-600 px-6 py-4 text-sm font-black text-white shadow-glow transition hover:-translate-y-0.5 hover:bg-brand-700 active:scale-95"
+          >
+            Send
+          </button>
+        </div>
+
+        <p class="mt-2 text-center text-[11px] font-medium text-slate-400">
+          Coordinate pickup politely and confirm details before meeting.
+        </p>
+      </form>
+    </div>
   </div>
 
   <script src="http://localhost:5000/socket.io/socket.io.js"></script>

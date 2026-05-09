@@ -64,7 +64,10 @@ router.post("/create", upload.single("foodImage"), async (req, res) => {
 // Get all food posts
 router.get("/all", async (req, res) => {
   try {
-    const posts = await FoodPost.find({ approvalStatus: "approved" })
+    const posts = await FoodPost.find({
+      approvalStatus: "approved",
+      status: "available",
+    })
       .populate("donor", "name role")
       .sort({ createdAt: -1 });
 
@@ -80,6 +83,7 @@ router.get("/search", async (req, res) => {
 
     let filter = {
       approvalStatus: "approved",
+      status: "available",
     };
 
     if (query) {

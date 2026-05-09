@@ -29,20 +29,20 @@ function renderMessage(message) {
   wrapper.className = isMine ? "flex justify-end" : "flex justify-start";
 
   wrapper.innerHTML = `
-    <div class="max-w-[75%] rounded-2xl px-4 py-3 text-sm ${
-      isMine
-        ? "bg-green-600 text-white rounded-br-sm"
-        : "bg-white text-slate-800 border border-slate-200 rounded-bl-sm"
-    }">
-      <p>${message.text}</p>
-      <p class="mt-1 text-[10px] opacity-70">
-        ${new Date(message.createdAt).toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit"
-        })}
-      </p>
-    </div>
-  `;
+  <div class="animate-fadeUp max-w-[78%] rounded-[26px] px-4 py-3 text-sm shadow-sm ${
+    isMine
+      ? "bg-green-600 text-white rounded-br-md"
+      : "bg-white text-slate-800 border border-slate-200 rounded-bl-md"
+  }">
+    <p class="leading-6">${message.text}</p>
+    <p class="mt-1 text-right text-[10px] font-medium opacity-70">
+      ${new Date(message.createdAt).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })}
+    </p>
+  </div>
+`;
 
   messagesBox.appendChild(wrapper);
   messagesBox.scrollTop = messagesBox.scrollHeight;
@@ -53,11 +53,11 @@ async function loadMessages() {
     const res = await fetch(`http://localhost:5000/api/messages/${requestId}`);
     const messages = await res.json();
     await fetch(
-  `http://localhost:5000/api/messages/read/${requestId}/${user._id}`,
-  {
-    method: "PUT"
-  }
-);
+      `http://localhost:5000/api/messages/read/${requestId}/${user._id}`,
+      {
+        method: "PUT",
+      },
+    );
 
     messagesBox.innerHTML = "";
 
@@ -93,7 +93,7 @@ chatForm.addEventListener("submit", (e) => {
     requestId,
     sender: user._id,
     receiver: receiverId,
-    text
+    text,
   });
 
   messageInput.value = "";
