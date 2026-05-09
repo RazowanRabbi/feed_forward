@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Posts | FeedForward</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: "#f0fdf4",
+              100: "#dcfce7",
+              600: "#16a34a",
+              700: "#15803d",
+              900: "#14532d"
+            }
+          },
+          boxShadow: {
+            soft: "0 10px 30px rgba(15, 23, 42, 0.08)"
+          }
+        }
+      }
+    };
+  </script>
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body class="min-h-screen bg-slate-50 text-slate-800">
+  <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+      <a href="feed.html" class="flex items-center gap-3">
+        <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-600 text-lg font-bold text-white shadow-soft">
+          F
+        </div>
+        <div>
+          <h1 class="text-xl font-bold text-slate-900">FeedForward</h1>
+          <p class="text-xs text-slate-500">Manage your food posts</p>
+        </div>
+      </a>
+
+      <div class="flex items-center gap-3">
+        <a
+          href="add_food.html"
+          class="rounded-2xl bg-brand-600 px-5 py-2 text-sm font-semibold text-white hover:bg-brand-700"
+        >
+          Create New Post
+        </a>
+
+        <a
+          href="feed.html"
+          class="rounded-2xl bg-slate-900 px-5 py-2 text-sm font-semibold text-white hover:bg-brand-700"
+        >
+          Back to Feed
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-6xl px-6 py-10">
+    <section class="rounded-[28px] border border-slate-200 bg-white p-7 shadow-soft">
+      <span class="inline-flex rounded-full border border-brand-200 bg-brand-50 px-4 py-2 text-sm font-semibold text-brand-700">
+        Donor Dashboard
+      </span>
+
+      <h1 class="mt-4 text-3xl font-bold text-slate-900">My Food Posts</h1>
+
+      <p class="mt-2 text-sm leading-6 text-slate-600">
+        Track all food posts you have created, including posts waiting for admin approval.
+      </p>
+
+      <div class="mt-6 grid gap-4 sm:grid-cols-3">
+        <div class="rounded-2xl bg-brand-50 p-5">
+          <p id="totalPosts" class="text-3xl font-bold text-brand-700">0</p>
+          <p class="text-sm text-slate-600">Total Posts</p>
+        </div>
+
+        <div class="rounded-2xl bg-yellow-50 p-5">
+          <p id="pendingPosts" class="text-3xl font-bold text-yellow-700">0</p>
+          <p class="text-sm text-slate-600">Pending Approval</p>
+        </div>
+
+        <div class="rounded-2xl bg-green-50 p-5">
+          <p id="approvedPosts" class="text-3xl font-bold text-green-700">0</p>
+          <p class="text-sm text-slate-600">Approved Posts</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="myPostsContainer" class="mt-8 space-y-5">
+      <div class="rounded-[24px] border border-slate-200 bg-white p-6 text-center text-slate-500 shadow-soft">
+        Loading your posts...
+      </div>
+    </section>
+  </main>
+
+  <script src="js/myPosts.js"></script>
+</body>
+</html>

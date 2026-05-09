@@ -10,13 +10,10 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname));
-  }
+  },
 });
 
 const upload = multer({ storage });
-
-
-
 
 // Create a new food post
 router.post("/create", upload.single("foodImage"), async (req, res) => {
@@ -32,7 +29,7 @@ router.post("/create", upload.single("foodImage"), async (req, res) => {
       area,
       city,
       latitude,
-      longitude
+      longitude,
     } = req.body;
 
     const post = new FoodPost({
@@ -50,14 +47,14 @@ router.post("/create", upload.single("foodImage"), async (req, res) => {
       foodImage: req.file
         ? `http://localhost:5000/uploads/${req.file.filename}`
         : "",
-      approvalStatus: "pending"
+      approvalStatus: "pending",
     });
 
     await post.save();
 
     res.status(201).json({
       message: "Food post submitted for admin approval",
-      post
+      post,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -77,13 +74,12 @@ router.get("/all", async (req, res) => {
   }
 });
 
-
 router.get("/search", async (req, res) => {
   try {
     const { query, category, city, area } = req.query;
 
     let filter = {
-      approvalStatus: "approved"
+      approvalStatus: "approved",
     };
 
     if (query) {
@@ -112,11 +108,26 @@ router.get("/search", async (req, res) => {
   }
 });
 
+// Get posts created by a specific donor
+router.get("/my-posts/:donorId", async (req, res) => {
+  try {
+    const posts = await FoodPost.find({ donor: req.params.donorId })
+      .populate("donor", "name email phone location")
+      .sort({ createdAt: -1 });
+
+    res.json(posts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Get single food post by ID
 router.get("/:id", async (req, res) => {
   try {
-    const post = await FoodPost.findById(req.params.id)
-      .populate("donor", "name email phone location");
+    const post = await FoodPost.findById(req.params.id).populate(
+      "donor",
+      "name email phone location",
+    );
 
     if (!post) {
       return res.status(404).json({ message: "Food post not found" });
@@ -127,8 +138,5 @@ router.get("/:id", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-
-
-
 
 module.exports = router;
