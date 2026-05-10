@@ -1,6 +1,84 @@
 const user = JSON.parse(localStorage.getItem("user"));
 const token = localStorage.getItem("token");
 
+function showToast(message, type = "success") {
+  const oldToast = document.getElementById("smartToast");
+
+  if (oldToast) {
+    oldToast.remove();
+  }
+
+  const toast = document.createElement("div");
+  toast.id = "smartToast";
+
+  const styles = {
+    success: {
+      bg: "from-green-500 to-emerald-600",
+      icon: "✅",
+    },
+    error: {
+      bg: "from-red-500 to-rose-600",
+      icon: "❌",
+    },
+    info: {
+      bg: "from-slate-700 to-slate-900",
+      icon: "ℹ️",
+    },
+  };
+
+  const current = styles[type] || styles.success;
+
+  toast.className = `
+    fixed left-1/2 top-6 z-[999999]
+    w-[92%] max-w-md
+    -translate-x-1/2
+    rounded-[28px]
+    bg-gradient-to-r ${current.bg}
+    px-5 py-4
+    text-white
+    shadow-2xl
+    backdrop-blur-xl
+    transition-all duration-500
+    animate-toastIn
+  `;
+
+  toast.innerHTML = `
+    <div class="flex items-start gap-4">
+      <div class="mt-1 text-2xl">
+        ${current.icon}
+      </div>
+
+      <div class="flex-1">
+        <h3 class="text-sm font-black uppercase tracking-wide opacity-80">
+          FeedForward
+        </h3>
+
+        <p class="mt-1 text-sm font-medium leading-6">
+          ${message}
+        </p>
+      </div>
+
+      <button
+        onclick="document.getElementById('smartToast').remove()"
+        class="text-lg font-bold opacity-70 hover:opacity-100"
+      >
+        ×
+      </button>
+    </div>
+  `;
+
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translate(-50%, -30px)";
+  }, 2600);
+
+  setTimeout(() => {
+    toast.remove();
+  }, 3200);
+}
+
 if (!token || !user) {
   window.location.href = "login.html";
 }
@@ -68,9 +146,9 @@ shareButtons.forEach((button) => {
 
     try {
       await navigator.clipboard.writeText(link);
-      alert("Post link copied!");
+      showToast("Post link copied!");
     } catch (error) {
-      alert("Share link: " + link);
+      showToast("Share link: " + link);
     }
   });
 });
@@ -81,7 +159,7 @@ donorOnlyLinks.forEach((link) => {
   link.addEventListener("click", (e) => {
     if (user.role !== "donor") {
       e.preventDefault();
-      alert(
+      showToast(
         "Only approved donors can create food posts. Please apply as a donor first.",
       );
       window.location.href = "apply_donor.html";
@@ -158,8 +236,16 @@ function renderPosts(posts) {
 
   if (posts.length === 0) {
     feedContainer.innerHTML = `
-      <div class="rounded-[24px] border border-slate-200 bg-white p-6 text-center text-slate-500 shadow-soft">
-        No matching food posts found.
+      <div class="rounded-[32px] border border-white/80 bg-white/90 p-10 text-center shadow-soft backdrop-blur">
+        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-brand-100 text-3xl">
+          🍽️
+        </div>
+        <h3 class="mt-4 text-xl font-black text-slate-950">
+          No food posts found
+        </h3>
+        <p class="mt-2 text-sm font-medium text-slate-500">
+          Try searching another area, city, or category.
+        </p>
       </div>
     `;
     return;
@@ -169,67 +255,130 @@ function renderPosts(posts) {
     if (user.role === "donor" && post.donor?._id === user._id) {
       return;
     }
+
+    const expiryText = post.expiryDateTime
+      ? new Date(post.expiryDateTime).toLocaleString([], {
+          dateStyle: "medium",
+          timeStyle: "short",
+        })
+      : "Not specified";
+
     const postHTML = `
-      <article class="rounded-[24px] border border-slate-200 bg-white p-6 shadow-soft">
-        <div class="flex items-center justify-between">
-          <div>
-            <h3 class="font-bold text-slate-900">
-              ${post.donor?.name || "Unknown"}
-            </h3>
-            <p class="text-sm text-slate-500">${post.category}</p>
-          </div>
-
-          <span class="text-green-600 text-sm font-semibold">
-            ${post.status}
-          </span>
-        </div>
-
+      <article class="group overflow-hidden rounded-[32px] border border-white/80 bg-white/90 shadow-soft backdrop-blur transition duration-300 hover:-translate-y-1 hover:shadow-glow">
         ${
           post.foodImage
             ? `
-      <img
-        src="${post.foodImage}"
-        alt="${post.foodName}"
-        class="mt-4 h-64 w-full rounded-2xl object-cover"
-      />
-    `
-            : ""
+              <div class="relative h-72 w-full overflow-hidden bg-slate-100">
+                <img
+                  src="${post.foodImage}"
+                  alt="${post.foodName}"
+                  class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                />
+
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/55 via-slate-950/10 to-transparent"></div>
+
+                <div class="absolute left-5 top-5">
+                  <span class="rounded-full bg-white/90 px-4 py-2 text-xs font-black text-brand-700 shadow-soft backdrop-blur">
+                    ${post.category}
+                  </span>
+                </div>
+
+                <div class="absolute bottom-5 left-5 right-5">
+                  <h2 class="text-3xl font-black tracking-tight text-white">
+                    ${post.foodName}
+                  </h2>
+                  <p class="mt-1 text-sm font-medium text-white/85">
+                    Shared by ${post.donor?.name || "Unknown donor"}
+                  </p>
+                </div>
+              </div>
+            `
+            : `
+              <div class="bg-gradient-to-br from-brand-600 to-brand-900 p-6 text-white">
+                <span class="rounded-full bg-white/15 px-4 py-2 text-xs font-black uppercase tracking-wide text-brand-50">
+                  ${post.category}
+                </span>
+                <h2 class="mt-5 text-3xl font-black tracking-tight">
+                  ${post.foodName}
+                </h2>
+                <p class="mt-1 text-sm font-medium text-brand-50/90">
+                  Shared by ${post.donor?.name || "Unknown donor"}
+                </p>
+              </div>
+            `
         }
 
-        <h2 class="mt-4 text-xl font-bold text-slate-900">
-          ${post.foodName}
-        </h2>
+        <div class="p-6">
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="rounded-full bg-brand-100 px-3 py-1 text-xs font-black text-brand-700">
+                  ${post.status}
+                </span>
 
-        <p class="mt-2 text-slate-600">
-          ${post.description}
-        </p>
+                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600">
+                  ${post.quantity}
+                </span>
+              </div>
 
-        <div class="mt-4 grid grid-cols-2 gap-2 text-sm text-slate-600">
-          <p><b>Quantity:</b> ${post.quantity}</p>
-          <p><b>Location:</b> ${post.pickupAddress}</p>
-          <p><b>Expiry:</b> ${new Date(post.expiryDateTime).toLocaleString()}</p>
-        </div>
+              <p class="mt-4 text-sm leading-7 text-slate-600">
+                ${post.description || "No description added."}
+              </p>
+            </div>
+          </div>
 
-        <div class="mt-5">
-          ${
-            user.role !== "admin"
-              ? `
-      <div class="mt-5">
-        <button
-          class="request-food-btn rounded-2xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700"
-          data-post-id="${post._id}"
-          data-donor-id="${post.donor?._id}"
-        >
-          Request Food
-        </button>
-      </div>
-    `
-              : `
-      <div class="mt-5 rounded-2xl bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-600">
-        Admin view only
-      </div>
-    `
-          }
+          <div class="mt-5 grid gap-3 sm:grid-cols-3">
+            <div class="rounded-3xl bg-slate-50 p-4">
+              <p class="text-xs font-black uppercase tracking-wide text-slate-400">
+                Quantity
+              </p>
+              <p class="mt-1 text-sm font-bold text-slate-800">
+                ${post.quantity}
+              </p>
+            </div>
+
+            <div class="rounded-3xl bg-slate-50 p-4">
+              <p class="text-xs font-black uppercase tracking-wide text-slate-400">
+                Pickup
+              </p>
+              <p class="mt-1 line-clamp-2 text-sm font-bold text-slate-800">
+                ${post.pickupAddress}
+              </p>
+            </div>
+
+            <div class="rounded-3xl bg-slate-50 p-4">
+              <p class="text-xs font-black uppercase tracking-wide text-slate-400">
+                Expiry
+              </p>
+              <p class="mt-1 text-sm font-bold text-slate-800">
+                ${expiryText}
+              </p>
+            </div>
+          </div>
+
+          <div class="mt-6 flex flex-col gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:items-center sm:justify-between">
+            <p class="text-xs font-medium text-slate-500">
+              Request only if you can pick it up on time.
+            </p>
+
+            ${
+              user.role !== "admin"
+                ? `
+                  <button
+                    class="request-food-btn rounded-2xl bg-brand-600 px-6 py-3 text-sm font-black text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-glow"
+                    data-post-id="${post._id}"
+                    data-donor-id="${post.donor?._id}"
+                  >
+                    Request Food
+                  </button>
+                `
+                : `
+                  <div class="rounded-2xl bg-slate-100 px-5 py-3 text-sm font-bold text-slate-600">
+                    Admin view only
+                  </div>
+                `
+            }
+          </div>
         </div>
       </article>
     `;
@@ -348,7 +497,7 @@ donorRequestLinks.forEach((link) => {
 
     if (!currentUser || currentUser.role !== "donor") {
       e.preventDefault();
-      alert("Only approved donors can view incoming food requests.");
+      showToast("Only approved donors can view incoming food requests.");
       return;
     }
   });

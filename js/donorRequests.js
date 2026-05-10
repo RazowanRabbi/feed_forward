@@ -100,7 +100,7 @@ function attachRequestActions() {
       const data = await res.json();
 
       if (res.ok) {
-        alert("Request accepted.");
+        showToast("Request accepted.");
         loadDonorRequests();
       } else {
         alert(data.message);

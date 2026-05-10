@@ -2,6 +2,40 @@ const foodPostForm = document.getElementById("foodPostForm");
 
 const user = JSON.parse(localStorage.getItem("user"));
 
+function showToast(message, type = "success") {
+  const existingToast = document.getElementById("customToast");
+  if (existingToast) existingToast.remove();
+
+  const toast = document.createElement("div");
+  toast.id = "customToast";
+
+  const bgColor =
+    type === "success"
+      ? "bg-green-600"
+      : type === "error"
+        ? "bg-red-600"
+        : "bg-slate-900";
+
+  toast.className = `
+    fixed right-5 top-24 z-[9999]
+    rounded-2xl ${bgColor}
+    px-5 py-3 text-sm font-bold text-white
+    shadow-lg transition-all duration-300
+  `;
+
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translateY(-10px)";
+  }, 2200);
+
+  setTimeout(() => {
+    toast.remove();
+  }, 2600);
+}
+
 if (!user) {
   window.location.href = "login.html";
 }
@@ -44,14 +78,14 @@ foodPostForm.addEventListener("submit", async (e) => {
     const data = await res.json();
 
     if (res.ok) {
-      alert("Food post submitted for admin approval.");
+      showToast("Food post submitted for admin approval.");
       foodPostForm.reset();
       window.location.href = "feed.html";
     } else {
-      alert(data.message);
+      showToast(data.message);
     }
   } catch (error) {
     console.error("Food post error:", error);
-    alert("Error creating food post.");
+    showToast("Error creating food post.");
   }
 });

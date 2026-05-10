@@ -1,6 +1,84 @@
 const menuBtn = document.getElementById("menuBtn");
 const mobileMenu = document.getElementById("mobileMenu");
 
+function showToast(message, type = "success") {
+  const oldToast = document.getElementById("smartToast");
+
+  if (oldToast) {
+    oldToast.remove();
+  }
+
+  const toast = document.createElement("div");
+  toast.id = "smartToast";
+
+  const styles = {
+    success: {
+      bg: "from-green-500 to-emerald-600",
+      icon: "✅",
+    },
+    error: {
+      bg: "from-red-500 to-rose-600",
+      icon: "❌",
+    },
+    info: {
+      bg: "from-slate-700 to-slate-900",
+      icon: "ℹ️",
+    },
+  };
+
+  const current = styles[type] || styles.success;
+
+  toast.className = `
+    fixed left-1/2 top-6 z-[999999]
+    w-[92%] max-w-md
+    -translate-x-1/2
+    rounded-[28px]
+    bg-gradient-to-r ${current.bg}
+    px-5 py-4
+    text-white
+    shadow-2xl
+    backdrop-blur-xl
+    transition-all duration-500
+    animate-toastIn
+  `;
+
+  toast.innerHTML = `
+    <div class="flex items-start gap-4">
+      <div class="mt-1 text-2xl">
+        ${current.icon}
+      </div>
+
+      <div class="flex-1">
+        <h3 class="text-sm font-black uppercase tracking-wide opacity-80">
+          FeedForward
+        </h3>
+
+        <p class="mt-1 text-sm font-medium leading-6">
+          ${message}
+        </p>
+      </div>
+
+      <button
+        onclick="document.getElementById('smartToast').remove()"
+        class="text-lg font-bold opacity-70 hover:opacity-100"
+      >
+        ×
+      </button>
+    </div>
+  `;
+
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translate(-50%, -30px)";
+  }, 2600);
+
+  setTimeout(() => {
+    toast.remove();
+  }, 3200);
+}
+
 if (menuBtn && mobileMenu) {
   menuBtn.addEventListener("click", () => {
     mobileMenu.classList.toggle("hidden");
@@ -178,15 +256,15 @@ if (registerForm) {
         const data = await res.json();
 
         if (res.ok) {
-          alert("Registration successful! Please login.");
+          showToast("Registration successful! Please login.");
           registerForm.reset();
           window.location.href = "login.html";
         } else {
-          alert(data.message);
+          showToast(data.message);
         }
       } catch (error) {
         console.error(error);
-        alert("Something went wrong. Make sure backend is running.");
+        showToast("Something went wrong. Make sure backend is running.");
       }
     }
   });
@@ -262,35 +340,31 @@ if (loginForm) {
         const data = await res.json();
 
         if (res.ok) {
-          alert("Login successful!");
+          showToast("Login successful!", "success");
 
-          // Save token (important for later)
+          // Save token + user
           localStorage.setItem("token", data.token);
           localStorage.setItem("user", JSON.stringify(data.user));
 
           loginForm.reset();
 
-          // Redirect to feed page (we will create next)
-          if (res.ok) {
-            alert("Login successful!");
-
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("user", JSON.stringify(data.user));
-
-            loginForm.reset();
-
+          // Smooth redirect
+          setTimeout(() => {
             if (data.user.role === "admin") {
               window.location.href = "admin_dashboard.html";
             } else {
               window.location.href = "feed.html";
             }
-          }
+          }, 1200);
         } else {
-          alert(data.message);
+          showToast(data.message, "error");
         }
       } catch (error) {
         console.error(error);
-        alert("Something went wrong. Make sure backend is running.");
+        showToast(
+          "Something went wrong. Make sure backend is running.",
+          "error",
+        );
       }
     }
   });

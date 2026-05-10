@@ -3,8 +3,86 @@ const resetForm = document.getElementById("resetForm");
 const params = new URLSearchParams(window.location.search);
 const token = params.get("token");
 
+function showToast(message, type = "success") {
+  const oldToast = document.getElementById("smartToast");
+
+  if (oldToast) {
+    oldToast.remove();
+  }
+
+  const toast = document.createElement("div");
+  toast.id = "smartToast";
+
+  const styles = {
+    success: {
+      bg: "from-green-500 to-emerald-600",
+      icon: "✅",
+    },
+    error: {
+      bg: "from-red-500 to-rose-600",
+      icon: "❌",
+    },
+    info: {
+      bg: "from-slate-700 to-slate-900",
+      icon: "ℹ️",
+    },
+  };
+
+  const current = styles[type] || styles.success;
+
+  toast.className = `
+    fixed left-1/2 top-6 z-[999999]
+    w-[92%] max-w-md
+    -translate-x-1/2
+    rounded-[28px]
+    bg-gradient-to-r ${current.bg}
+    px-5 py-4
+    text-white
+    shadow-2xl
+    backdrop-blur-xl
+    transition-all duration-500
+    animate-toastIn
+  `;
+
+  toast.innerHTML = `
+    <div class="flex items-start gap-4">
+      <div class="mt-1 text-2xl">
+        ${current.icon}
+      </div>
+
+      <div class="flex-1">
+        <h3 class="text-sm font-black uppercase tracking-wide opacity-80">
+          FeedForward
+        </h3>
+
+        <p class="mt-1 text-sm font-medium leading-6">
+          ${message}
+        </p>
+      </div>
+
+      <button
+        onclick="document.getElementById('smartToast').remove()"
+        class="text-lg font-bold opacity-70 hover:opacity-100"
+      >
+        ×
+      </button>
+    </div>
+  `;
+
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translate(-50%, -30px)";
+  }, 2600);
+
+  setTimeout(() => {
+    toast.remove();
+  }, 3200);
+}
+
 if (!token) {
-  alert("Invalid reset link.");
+  showToast("Invalid reset link.");
   window.location.href = "forgot_password.html";
 }
 
@@ -15,12 +93,12 @@ resetForm.addEventListener("submit", async (e) => {
   const confirmPassword = document.getElementById("confirmPassword").value;
 
   if (password.length < 6) {
-    alert("Password must be at least 6 characters.");
+    showToast("Password must be at least 6 characters.");
     return;
   }
 
   if (password !== confirmPassword) {
-    alert("Passwords do not match.");
+    showToast("Passwords do not match.");
     return;
   }
 
@@ -39,7 +117,7 @@ resetForm.addEventListener("submit", async (e) => {
     const data = await res.json();
 
     if (res.ok) {
-      alert("Password reset successful. Please login.");
+      showToast("Password reset successful. Please login.");
       window.location.href = "login.html";
     } else {
       alert(data.message);
