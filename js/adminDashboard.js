@@ -202,37 +202,25 @@ const donorTab = document.getElementById("donorTab");
 const volunteerTab = document.getElementById("volunteerTab");
 const postTab = document.getElementById("postTab");
 
-
 function setActiveTab(active) {
-  [donorTab, volunteerTab, postTab].forEach((tab) => {
+  [donorTab, postTab].forEach((tab) => {
     tab.className =
       "w-full rounded-2xl px-4 py-3 text-left text-sm font-semibold text-slate-600 hover:bg-slate-100";
   });
 
   active.className =
     "w-full rounded-2xl bg-brand-50 px-4 py-3 text-left text-sm font-semibold text-brand-700";
-}
 
-volunteerTab.addEventListener("click", () => {
-  setActiveTab(volunteerTab);
-  loadPendingVolunteers();
-});
+  if (volunteerTab) {
+    volunteerTab.className = "hidden";
+  }
+}
 
 postTab.addEventListener("click", () => {
   console.log("Post approval clicked");
   setActiveTab(postTab);
   loadPendingPosts();
 });
-
-  donorApplications.innerHTML = `
-    <div class="rounded-[24px] border border-slate-200 bg-white p-6 shadow-soft">
-      <h1 class="text-2xl font-bold text-slate-900">Post Approvals</h1>
-      <p class="mt-2 text-sm text-slate-500">
-        No pending food post approvals found.
-      </p>
-    </div>
-  `;
-
 
 donorTab.addEventListener("click", () => {
   setActiveTab(donorTab);
@@ -241,7 +229,9 @@ donorTab.addEventListener("click", () => {
 
 async function loadPendingVolunteers() {
   try {
-    const res = await fetch("http://localhost:5000/api/admin/pending-volunteers");
+    const res = await fetch(
+      "http://localhost:5000/api/admin/pending-volunteers",
+    );
     const users = await res.json();
 
     donorApplications.innerHTML = "";
@@ -306,9 +296,12 @@ function attachVolunteerEvents() {
     button.addEventListener("click", async () => {
       const userId = button.dataset.id;
 
-      const res = await fetch(`http://localhost:5000/api/admin/approve-volunteer/${userId}`, {
-        method: "PUT"
-      });
+      const res = await fetch(
+        `http://localhost:5000/api/admin/approve-volunteer/${userId}`,
+        {
+          method: "PUT",
+        },
+      );
 
       const data = await res.json();
 
@@ -325,9 +318,12 @@ function attachVolunteerEvents() {
     button.addEventListener("click", async () => {
       const userId = button.dataset.id;
 
-      const res = await fetch(`http://localhost:5000/api/admin/reject-volunteer/${userId}`, {
-        method: "PUT"
-      });
+      const res = await fetch(
+        `http://localhost:5000/api/admin/reject-volunteer/${userId}`,
+        {
+          method: "PUT",
+        },
+      );
 
       const data = await res.json();
 
@@ -422,14 +418,17 @@ function attachPostEvents() {
     button.addEventListener("click", async () => {
       const id = button.dataset.id;
 
-      const res = await fetch(`http://localhost:5000/api/admin/approve-post/${id}`, {
-        method: "PUT"
-      });
+      const res = await fetch(
+        `http://localhost:5000/api/admin/approve-post/${id}`,
+        {
+          method: "PUT",
+        },
+      );
 
       const data = await res.json();
 
       if (res.ok) {
-        alert("Post approved");
+        showToast("Post approved");
         loadPendingPosts();
       } else {
         alert(data.message);
@@ -441,9 +440,12 @@ function attachPostEvents() {
     button.addEventListener("click", async () => {
       const id = button.dataset.id;
 
-      const res = await fetch(`http://localhost:5000/api/admin/reject-post/${id}`, {
-        method: "PUT"
-      });
+      const res = await fetch(
+        `http://localhost:5000/api/admin/reject-post/${id}`,
+        {
+          method: "PUT",
+        },
+      );
 
       const data = await res.json();
 

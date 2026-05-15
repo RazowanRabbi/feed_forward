@@ -81,8 +81,14 @@ function showToast(message, type = "success") {
   }, 3200);
 }
 
+function redirectAfterToast(page, delay = 2000) {
+  setTimeout(() => {
+    window.location.href = page;
+  }, delay);
+}
+
 if (!user) {
-  window.location.href = "login.html";
+  redirectAfterToast("login.html");
 }
 
 const foodDetails = document.getElementById("foodDetails");
@@ -153,12 +159,12 @@ form.addEventListener("submit", async (e) => {
 
     if (res.ok) {
       showToast("Request sent successfully!");
-      window.location.href = "feed.html";
+      redirectAfterToast("feed.html");
     } else {
-      alert(data.message);
+      showToast(data.message || "Request failed.", "error");
     }
   } catch (error) {
     console.error(error);
-    showToast("Error sending request");
+    showToast("Error sending request.", "error");
   }
 });

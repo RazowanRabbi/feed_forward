@@ -79,6 +79,12 @@ function showToast(message, type = "success") {
   }, 3200);
 }
 
+function redirectAfterToast(page, delay = 2000) {
+  setTimeout(() => {
+    window.location.href = page;
+  }, delay);
+}
+
 if (menuBtn && mobileMenu) {
   menuBtn.addEventListener("click", () => {
     mobileMenu.classList.toggle("hidden");
@@ -258,13 +264,16 @@ if (registerForm) {
         if (res.ok) {
           showToast("Registration successful! Please login.");
           registerForm.reset();
-          window.location.href = "login.html";
+          redirectAfterToast("login.html");
         } else {
-          showToast(data.message);
+          showToast(data.message || "Registration failed.", "error");
         }
       } catch (error) {
         console.error(error);
-        showToast("Something went wrong. Make sure backend is running.");
+        showToast(
+          "Something went wrong. Make sure backend is running.",
+          "error",
+        );
       }
     }
   });
@@ -349,13 +358,11 @@ if (loginForm) {
           loginForm.reset();
 
           // Smooth redirect
-          setTimeout(() => {
-            if (data.user.role === "admin") {
-              window.location.href = "admin_dashboard.html";
-            } else {
-              window.location.href = "feed.html";
-            }
-          }, 1200);
+          if (data.user.role === "admin") {
+            redirectAfterToast("admin_dashboard.html", 2000);
+          } else {
+            redirectAfterToast("feed.html", 2000);
+          }
         } else {
           showToast(data.message, "error");
         }

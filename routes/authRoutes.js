@@ -120,13 +120,15 @@ router.put(
   profileUpload.single("profileImage"),
   async (req, res) => {
     try {
-      const { name, phone, location, bio } = req.body;
+      const { name, phone, location, bio, latitude, longitude } = req.body;
 
       const updateData = {
         name,
         phone,
         location,
         bio,
+        latitude: latitude ? Number(latitude) : null,
+        longitude: longitude ? Number(longitude) : null,
       };
 
       if (req.file) {
@@ -158,7 +160,7 @@ router.post("/forgot-password", async (req, res) => {
 
     if (!user) {
       return res.status(404).json({
-        message: "No account found with this email."
+        message: "No account found with this email.",
       });
     }
 
@@ -175,8 +177,8 @@ router.post("/forgot-password", async (req, res) => {
       service: "gmail",
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-      }
+        pass: process.env.EMAIL_PASS,
+      },
     });
 
     await transporter.sendMail({
@@ -209,13 +211,12 @@ router.post("/forgot-password", async (req, res) => {
             </p>
           </div>
         </div>
-      `
+      `,
     });
 
     res.json({
-      message: "Password reset link has been sent to your email."
+      message: "Password reset link has been sent to your email.",
     });
-
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -228,11 +229,13 @@ router.post("/reset-password", async (req, res) => {
 
     const user = await User.findOne({
       resetPasswordToken: token,
-      resetPasswordExpires: { $gt: Date.now() }
+      resetPasswordExpires: { $gt: Date.now() },
     });
 
     if (!user) {
-      return res.status(400).json({ message: "Invalid or expired reset link." });
+      return res
+        .status(400)
+        .json({ message: "Invalid or expired reset link." });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -244,13 +247,10 @@ router.post("/reset-password", async (req, res) => {
     await user.save();
 
     res.json({ message: "Password reset successful. You can now login." });
-
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
-
-module.exports = router;
 
 // Apply as donor
 router.post("/apply-donor", async (req, res) => {
@@ -277,3 +277,22 @@ router.post("/apply-donor", async (req, res) => {
 
   // Get user by ID
 });
+
+router.get("/approved-donors", async (req, res) => {
+  try {
+    const donors = await User.find({
+      role: "donor",
+      donorStatus: "approved",
+      latitude: { $ne: null },
+      longitude: { $ne: null },
+    }).select(
+      "name email phone location profileImage bio role donorStatus latitude longitude",
+    );
+
+    res.json(donors);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+module.exports = router;

@@ -31,6 +31,16 @@ const userSchema = new mongoose.Schema(
       default: "",
     },
 
+    latitude: {
+      type: Number,
+      default: null,
+    },
+
+    longitude: {
+      type: Number,
+      default: null,
+    },
+
     profileImage: {
       type: String,
       default: "",

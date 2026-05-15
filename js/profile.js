@@ -78,8 +78,14 @@ function showToast(message, type = "success") {
   }, 3200);
 }
 
+function redirectAfterToast(page, delay = 2000) {
+  setTimeout(() => {
+    window.location.href = page;
+  }, delay);
+}
+
 if (!user) {
-  window.location.href = "login.html";
+  redirectAfterToast("login.html");
 }
 
 const profileForm = document.getElementById("profileForm");
@@ -91,11 +97,114 @@ const locationInput = document.getElementById("location");
 const bioInput = document.getElementById("bio");
 const profileImageInput = document.getElementById("profileImage");
 
+const latitudeInput = document.getElementById("latitude");
+const longitudeInput = document.getElementById("longitude");
+const profileMapElement = document.getElementById("profileMap");
+const useCurrentLocationBtn = document.getElementById("useCurrentLocationBtn");
+const mapLocationStatus = document.getElementById("mapLocationStatus");
+
 const previewImage = document.getElementById("previewImage");
 const previewName = document.getElementById("previewName");
 const previewEmail = document.getElementById("previewEmail");
 const previewRole = document.getElementById("previewRole");
 const previewDonorStatus = document.getElementById("previewDonorStatus");
+
+let profileMap = null;
+let profileMarker = null;
+
+function setProfileMapLocation(lat, lng, zoom = 15) {
+  if (!latitudeInput || !longitudeInput) return;
+
+  latitudeInput.value = lat;
+  longitudeInput.value = lng;
+
+  if (!profileMap) return;
+
+  profileMap.setView([lat, lng], zoom);
+
+  if (profileMarker) {
+    profileMarker.setLatLng([lat, lng]);
+  } else {
+    profileMarker = L.marker([lat, lng], {
+      draggable: true,
+    }).addTo(profileMap);
+
+    profileMarker.on("dragend", () => {
+      const position = profileMarker.getLatLng();
+      latitudeInput.value = position.lat;
+      longitudeInput.value = position.lng;
+
+      if (mapLocationStatus) {
+        mapLocationStatus.textContent = "Map location updated by dragging pin.";
+      }
+    });
+  }
+
+  if (mapLocationStatus) {
+    mapLocationStatus.textContent = "Map location selected successfully.";
+  }
+}
+
+function initProfileMap(savedLat = null, savedLng = null) {
+  if (!profileMapElement || typeof L === "undefined") return;
+
+  const defaultLat = savedLat || 23.8103;
+  const defaultLng = savedLng || 90.4125;
+
+  profileMap = L.map("profileMap").setView([defaultLat, defaultLng], 12);
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: "&copy; OpenStreetMap contributors",
+  }).addTo(profileMap);
+
+  if (savedLat && savedLng) {
+    setProfileMapLocation(savedLat, savedLng, 15);
+  }
+
+  profileMap.on("click", (e) => {
+    setProfileMapLocation(e.latlng.lat, e.latlng.lng, 15);
+  });
+
+  setTimeout(() => {
+    profileMap.invalidateSize();
+  }, 300);
+}
+
+if (useCurrentLocationBtn) {
+  useCurrentLocationBtn.addEventListener("click", () => {
+    if (!navigator.geolocation) {
+      showToast("Your browser does not support location access.", "error");
+      return;
+    }
+
+    if (mapLocationStatus) {
+      mapLocationStatus.textContent = "Getting your current location...";
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+
+        setProfileMapLocation(lat, lng, 16);
+        showToast("Current location selected.");
+      },
+      () => {
+        showToast("Could not access your current location.", "error");
+
+        if (mapLocationStatus) {
+          mapLocationStatus.textContent =
+            "Location access failed. You can still click on the map manually.";
+        }
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+      },
+    );
+  });
+}
 
 async function loadProfile() {
   try {
@@ -110,15 +219,22 @@ async function loadProfile() {
     locationInput.value = freshUser.location || "";
     bioInput.value = freshUser.bio || "";
 
+    if (latitudeInput) latitudeInput.value = freshUser.latitude || "";
+    if (longitudeInput) longitudeInput.value = freshUser.longitude || "";
+
     previewImage.src =
       freshUser.profileImage || "https://via.placeholder.com/160";
     previewName.textContent = freshUser.name || "Unknown User";
     previewEmail.textContent = freshUser.email || "";
     previewRole.textContent = freshUser.role || "receiver";
     previewDonorStatus.textContent = freshUser.donorStatus || "none";
+
+    if (!profileMap) {
+      initProfileMap(freshUser.latitude, freshUser.longitude);
+    }
   } catch (error) {
     console.error("Profile load error:", error);
-    alert("Could not load profile.");
+    showToast("Could not load profile.", "error");
   }
 }
 
@@ -140,6 +256,11 @@ profileForm.addEventListener("submit", async (e) => {
   formData.append("location", locationInput.value.trim());
   formData.append("bio", bioInput.value.trim());
 
+  if (latitudeInput && longitudeInput) {
+    formData.append("latitude", latitudeInput.value);
+    formData.append("longitude", longitudeInput.value);
+  }
+
   const imageFile = profileImageInput.files[0];
 
   if (imageFile) {
@@ -160,13 +281,13 @@ profileForm.addEventListener("submit", async (e) => {
     if (res.ok) {
       localStorage.setItem("user", JSON.stringify(updatedUser));
       showToast("Profile updated successfully.");
-      window.location.href = "feed.html";
+      redirectAfterToast("feed.html", 2200);
     } else {
-      alert(updatedUser.message || "Profile update failed.");
+      showToast(updatedUser.message || "Profile update failed.", "error");
     }
   } catch (error) {
     console.error("Profile update error:", error);
-    showToast("Error updating profile.");
+    showToast("Error updating profile.", "error");
   }
 });
 

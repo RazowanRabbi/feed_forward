@@ -7,6 +7,13 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
 
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <script>
       tailwind.config = {
         theme: {
@@ -181,6 +188,37 @@
               Later this will support Google Maps address suggestion and
               automatic location coordinates.
             </p>
+          </div>
+
+          <div>
+            <label class="mb-2 block text-sm font-semibold text-slate-700">
+              Pickup Location on Map
+            </label>
+
+            <div
+              id="pickupMap"
+              class="h-80 w-full rounded-2xl border border-slate-300"
+            ></div>
+
+            <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <button
+                type="button"
+                id="usePickupCurrentLocationBtn"
+                class="rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-700"
+              >
+                Use Current Location
+              </button>
+
+              <p
+                id="pickupLocationStatus"
+                class="text-sm font-medium text-slate-500"
+              >
+                Click on the map or use your current location.
+              </p>
+            </div>
+
+            <input type="hidden" id="pickupLatitude" />
+            <input type="hidden" id="pickupLongitude" />
           </div>
 
           <div class="grid gap-5 sm:grid-cols-2">
