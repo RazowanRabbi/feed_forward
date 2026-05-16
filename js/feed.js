@@ -167,7 +167,7 @@ donorOnlyLinks.forEach((link) => {
   });
 });
 
-// ================= USER PANEL =================
+
 
 const profileImage = document.getElementById("profileImage");
 const userName = document.getElementById("userName");
@@ -191,10 +191,10 @@ async function loadUserPanel() {
     );
     const user = await res.json();
 
-    // update localStorage
+    
     localStorage.setItem("user", JSON.stringify(user));
 
-    // update UI
+    
     profileImage.src =
       user.profileImage && user.profileImage.trim() !== ""
         ? user.profileImage
@@ -224,10 +224,9 @@ async function loadUserPanel() {
   }
 }
 
-// run it
 loadUserPanel();
 
-// ================= LOAD POSTS =================
+
 
 const feedContainer = document.getElementById("postsContainer");
 
@@ -462,13 +461,13 @@ async function loadUnreadCount() {
     const data = await res.json();
 
     if (data.unread > 0) {
-      // donor incoming requests badge
+      
       if (currentUser.role === "donor" && incomingUnreadBadge) {
         incomingUnreadBadge.classList.remove("hidden");
         incomingUnreadBadge.textContent = data.unread;
       }
 
-      // receiver + donor my requests badge
+      
       if (myRequestsUnreadBadge) {
         myRequestsUnreadBadge.classList.remove("hidden");
         myRequestsUnreadBadge.textContent = data.unread;

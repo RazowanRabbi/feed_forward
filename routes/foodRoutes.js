@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Create a new food post
+
 router.post("/create", upload.single("foodImage"), async (req, res) => {
   try {
     const {
@@ -61,7 +61,6 @@ router.post("/create", upload.single("foodImage"), async (req, res) => {
   }
 });
 
-// Get all food posts
 router.get("/all", async (req, res) => {
   try {
     const posts = await FoodPost.find({
@@ -112,7 +111,6 @@ router.get("/search", async (req, res) => {
   }
 });
 
-// Get posts created by a specific donor
 router.get("/my-posts/:donorId", async (req, res) => {
   try {
     const posts = await FoodPost.find({ donor: req.params.donorId })
@@ -125,7 +123,7 @@ router.get("/my-posts/:donorId", async (req, res) => {
   }
 });
 
-// Get single food post by ID
+
 router.get("/:id", async (req, res) => {
   try {
     const post = await FoodPost.findById(req.params.id).populate(

@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 
-// Get all pending donor applications
+
 router.get("/pending-donors", async (req, res) => {
   try {
     const users = await User.find({ donorStatus: "pending" }).select("-password");
@@ -13,7 +13,7 @@ router.get("/pending-donors", async (req, res) => {
   }
 });
 
-// Approve donor
+
 router.put("/approve-donor/:id", async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(
@@ -38,7 +38,7 @@ router.put("/approve-donor/:id", async (req, res) => {
   }
 });
 
-// Reject donor
+
 router.put("/reject-donor/:id", async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(
@@ -62,7 +62,7 @@ router.put("/reject-donor/:id", async (req, res) => {
   }
 });
 
-// Get all pending volunteer applications
+
 router.get("/pending-volunteers", async (req, res) => {
   try {
     const users = await User.find({ volunteerStatus: "pending" }).select("-password");
@@ -72,7 +72,7 @@ router.get("/pending-volunteers", async (req, res) => {
   }
 });
 
-// Approve volunteer
+
 router.put("/approve-volunteer/:id", async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(
@@ -97,7 +97,7 @@ router.put("/approve-volunteer/:id", async (req, res) => {
   }
 });
 
-// Reject volunteer
+
 router.put("/reject-volunteer/:id", async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(
@@ -121,7 +121,7 @@ router.put("/reject-volunteer/:id", async (req, res) => {
   }
 });
 
-// Get all pending food posts
+
 router.get("/pending-posts", async (req, res) => {
   try {
     const posts = await FoodPost.find({ approvalStatus: "pending" })
@@ -134,7 +134,7 @@ router.get("/pending-posts", async (req, res) => {
   }
 });
 
-// Approve food post
+
 router.put("/approve-post/:id", async (req, res) => {
   try {
     const post = await FoodPost.findByIdAndUpdate(
@@ -153,7 +153,7 @@ router.put("/approve-post/:id", async (req, res) => {
   }
 });
 
-// Reject food post
+
 router.put("/reject-post/:id", async (req, res) => {
   try {
     const post = await FoodPost.findByIdAndUpdate(

@@ -85,7 +85,7 @@ if (!user) {
   window.location.href = "login.html";
 }
 
-// 🔹 Load current status on page load
+
 async function loadStatus() {
   try {
     const res = await fetch(`http://localhost:5000/api/auth/user/${user._id}`);
@@ -126,7 +126,7 @@ async function loadStatus() {
 
 loadStatus();
 
-// 🔹 Apply button logic
+
 applyBtn.addEventListener("click", async () => {
   try {
     const res = await fetch("http://localhost:5000/api/auth/apply-donor", {
@@ -141,7 +141,7 @@ applyBtn.addEventListener("click", async () => {
 
     if (res.ok) {
       showToast("Application submitted!");
-      loadStatus(); // refresh UI
+      loadStatus(); 
     } else {
       showToast(data.message);
     }

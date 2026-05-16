@@ -9,9 +9,6 @@ const pickupLongitudeInput = document.getElementById("pickupLongitude");
 const pickupMapElement = document.getElementById("pickupMap");
 const pickupLocationStatus = document.getElementById("pickupLocationStatus");
 
-let pickupMap = null;
-let pickupMarker = null;
-
 function showToast(message, type = "success") {
   const existingToast = document.getElementById("customToast");
   if (existingToast) existingToast.remove();
@@ -39,17 +36,21 @@ function showToast(message, type = "success") {
   setTimeout(() => {
     toast.style.opacity = "0";
     toast.style.transform = "translateY(-10px)";
-  }, 3300);
+  }, 4500);
 
   setTimeout(() => {
     toast.remove();
-  }, 3800);
+  }, 5000);
 }
 
 function redirectAfterToast(page, delay = 2000) {
   setTimeout(() => {
     window.location.href = page;
   }, delay);
+}
+
+function wait(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 if (!user) {
@@ -59,28 +60,43 @@ if (!user) {
   redirectAfterToast("apply_donor.html", 4000);
 }
 
+let pickupMap = null;
+let pickupMarker = null;
+
 function setPickupLocation(lat, lng, zoom = 15) {
   if (!pickupLatitudeInput || !pickupLongitudeInput) return;
 
-  pickupLatitudeInput.value = lat;
-  pickupLongitudeInput.value = lng;
+  const cleanLat = Number(lat);
+  const cleanLng = Number(lng);
 
-  if (!pickupMap) return;
+  pickupLatitudeInput.value = cleanLat;
+  pickupLongitudeInput.value = cleanLng;
 
-  pickupMap.setView([lat, lng], zoom);
+  if (!pickupMap || typeof google === "undefined") return;
+
+  const position = {
+    lat: cleanLat,
+    lng: cleanLng,
+  };
+
+  pickupMap.setCenter(position);
+  pickupMap.setZoom(zoom);
 
   if (pickupMarker) {
-    pickupMarker.setLatLng([lat, lng]);
+    pickupMarker.setPosition(position);
   } else {
-    pickupMarker = L.marker([lat, lng], {
+    pickupMarker = new google.maps.Marker({
+      position,
+      map: pickupMap,
       draggable: true,
-    }).addTo(pickupMap);
+      animation: google.maps.Animation.DROP,
+    });
 
-    pickupMarker.on("dragend", () => {
-      const position = pickupMarker.getLatLng();
+    pickupMarker.addListener("dragend", () => {
+      const markerPosition = pickupMarker.getPosition();
 
-      pickupLatitudeInput.value = position.lat;
-      pickupLongitudeInput.value = position.lng;
+      pickupLatitudeInput.value = markerPosition.lat();
+      pickupLongitudeInput.value = markerPosition.lng();
 
       pickupLocationStatus.textContent =
         "Pickup location updated by dragging pin.";
@@ -90,26 +106,27 @@ function setPickupLocation(lat, lng, zoom = 15) {
   pickupLocationStatus.textContent = "Pickup location selected successfully.";
 }
 
-function initPickupMap() {
-  if (!pickupMapElement || typeof L === "undefined") return;
+function initPickupGoogleMap() {
+  if (!pickupMapElement || typeof google === "undefined") return;
 
-  pickupMap = L.map("pickupMap").setView([23.8103, 90.4125], 12);
-
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution: "&copy; OpenStreetMap contributors",
-  }).addTo(pickupMap);
-
-  pickupMap.on("click", (e) => {
-    setPickupLocation(e.latlng.lat, e.latlng.lng);
+  pickupMap = new google.maps.Map(pickupMapElement, {
+    center: {
+      lat: 23.8103,
+      lng: 90.4125,
+    },
+    zoom: 12,
+    mapTypeControl: false,
+    streetViewControl: false,
+    fullscreenControl: true,
+    zoomControl: true,
   });
 
-  setTimeout(() => {
-    pickupMap.invalidateSize();
-  }, 300);
+  pickupMap.addListener("click", (event) => {
+    setPickupLocation(event.latLng.lat(), event.latLng.lng(), 15);
+  });
 }
 
-initPickupMap();
+window.initPickupGoogleMap = initPickupGoogleMap;
 
 const usePickupCurrentLocationBtn = document.getElementById(
   "usePickupCurrentLocationBtn",
@@ -198,10 +215,14 @@ foodPostForm.addEventListener("submit", async (e) => {
     console.log("Backend data:", data);
 
     if (res.ok) {
-      showToast("Food post submitted for admin approval.");
+      showToast("Food post submitted for admin approval.", "success");
+
+      await wait(3500);
+
       foodPostForm.reset();
+
       if (pickupMarker) {
-        pickupMap.removeLayer(pickupMarker);
+        pickupMarker.setMap(null);
         pickupMarker = null;
       }
 
@@ -210,7 +231,8 @@ foodPostForm.addEventListener("submit", async (e) => {
 
       pickupLocationStatus.textContent =
         "Click on the map or use your current location.";
-      redirectAfterToast("feed.html", 3000);
+
+      window.location.href = "feed.html";
     } else {
       showToast(data.message || "Food post creation failed.", "error");
     }

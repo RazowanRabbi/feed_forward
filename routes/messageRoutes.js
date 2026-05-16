@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Message = require("../models/Message");
 
-// Get messages for a request
+
 router.get("/:requestId", async (req, res) => {
   try {
     const messages = await Message.find({ request: req.params.requestId })
@@ -16,7 +16,7 @@ router.get("/:requestId", async (req, res) => {
   }
 });
 
-// Get unread count for current user
+
 router.get("/unread/:userId", async (req, res) => {
   try {
     const count = await Message.countDocuments({
@@ -30,7 +30,7 @@ router.get("/unread/:userId", async (req, res) => {
   }
 });
 
-// Mark messages as read
+
 router.put("/read/:requestId/:userId", async (req, res) => {
   try {
     await Message.updateMany(

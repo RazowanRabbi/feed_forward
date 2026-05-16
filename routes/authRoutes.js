@@ -19,7 +19,7 @@ const profileStorage = multer.diskStorage({
 
 const profileUpload = multer({ storage: profileStorage });
 
-// Register
+
 router.post("/register", async (req, res) => {
   try {
     const { name, email, password, role, phone, location } = req.body;
@@ -48,7 +48,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// Login
+
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -75,7 +75,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// Get user by ID
+
 router.get("/user/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -90,7 +90,7 @@ router.get("/user/:id", async (req, res) => {
   }
 });
 
-// Apply as volunteer
+
 router.post("/apply-volunteer", async (req, res) => {
   try {
     const { userId } = req.body;
@@ -114,7 +114,7 @@ router.post("/apply-volunteer", async (req, res) => {
   }
 });
 
-// Update user profile with optional profile image
+
 router.put(
   "/update-profile/:id",
   profileUpload.single("profileImage"),
@@ -150,8 +150,7 @@ router.put(
   },
 );
 
-// Forgot password
-// Forgot password - send reset link by email
+
 router.post("/forgot-password", async (req, res) => {
   try {
     const { email } = req.body;
@@ -222,7 +221,7 @@ router.post("/forgot-password", async (req, res) => {
   }
 });
 
-// Reset password
+
 router.post("/reset-password", async (req, res) => {
   try {
     const { token, password } = req.body;
@@ -252,7 +251,7 @@ router.post("/reset-password", async (req, res) => {
   }
 });
 
-// Apply as donor
+
 router.post("/apply-donor", async (req, res) => {
   try {
     const { userId } = req.body;
@@ -275,7 +274,7 @@ router.post("/apply-donor", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 
-  // Get user by ID
+
 });
 
 router.get("/approved-donors", async (req, res) => {

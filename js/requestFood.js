@@ -131,7 +131,7 @@ async function loadFood() {
 
 loadFood();
 
-// Handle form submit
+
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 

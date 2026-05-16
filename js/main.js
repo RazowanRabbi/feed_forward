@@ -351,13 +351,13 @@ if (loginForm) {
         if (res.ok) {
           showToast("Login successful!", "success");
 
-          // Save token + user
+          
           localStorage.setItem("token", data.token);
           localStorage.setItem("user", JSON.stringify(data.user));
 
           loginForm.reset();
 
-          // Smooth redirect
+          
           if (data.user.role === "admin") {
             redirectAfterToast("admin_dashboard.html", 2000);
           } else {

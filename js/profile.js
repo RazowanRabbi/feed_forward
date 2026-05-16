@@ -3,9 +3,7 @@ const user = JSON.parse(localStorage.getItem("user"));
 function showToast(message, type = "success") {
   const oldToast = document.getElementById("smartToast");
 
-  if (oldToast) {
-    oldToast.remove();
-  }
+  if (oldToast) oldToast.remove();
 
   const toast = document.createElement("div");
   toast.id = "smartToast";
@@ -43,18 +41,13 @@ function showToast(message, type = "success") {
 
   toast.innerHTML = `
     <div class="flex items-start gap-4">
-      <div class="mt-1 text-2xl">
-        ${current.icon}
-      </div>
+      <div class="mt-1 text-2xl">${current.icon}</div>
 
       <div class="flex-1">
         <h3 class="text-sm font-black uppercase tracking-wide opacity-80">
           FeedForward
         </h3>
-
-        <p class="mt-1 text-sm font-medium leading-6">
-          ${message}
-        </p>
+        <p class="mt-1 text-sm font-medium leading-6">${message}</p>
       </div>
 
       <button
@@ -111,28 +104,41 @@ const previewDonorStatus = document.getElementById("previewDonorStatus");
 
 let profileMap = null;
 let profileMarker = null;
+let pendingSavedLat = null;
+let pendingSavedLng = null;
 
 function setProfileMapLocation(lat, lng, zoom = 15) {
   if (!latitudeInput || !longitudeInput) return;
 
-  latitudeInput.value = lat;
-  longitudeInput.value = lng;
+  const cleanLat = Number(lat);
+  const cleanLng = Number(lng);
 
-  if (!profileMap) return;
+  latitudeInput.value = cleanLat;
+  longitudeInput.value = cleanLng;
 
-  profileMap.setView([lat, lng], zoom);
+  if (!profileMap || typeof google === "undefined") return;
+
+  const position = { lat: cleanLat, lng: cleanLng };
+
+  profileMap.setCenter(position);
+  profileMap.setZoom(zoom);
 
   if (profileMarker) {
-    profileMarker.setLatLng([lat, lng]);
+    profileMarker.setPosition(position);
   } else {
-    profileMarker = L.marker([lat, lng], {
+    profileMarker = new google.maps.Marker({
+      position,
+      map: profileMap,
       draggable: true,
-    }).addTo(profileMap);
+      title: "Your map location",
+      animation: google.maps.Animation.DROP,
+    });
 
-    profileMarker.on("dragend", () => {
-      const position = profileMarker.getLatLng();
-      latitudeInput.value = position.lat;
-      longitudeInput.value = position.lng;
+    profileMarker.addListener("dragend", () => {
+      const markerPosition = profileMarker.getPosition();
+
+      latitudeInput.value = markerPosition.lat();
+      longitudeInput.value = markerPosition.lng();
 
       if (mapLocationStatus) {
         mapLocationStatus.textContent = "Map location updated by dragging pin.";
@@ -145,31 +151,31 @@ function setProfileMapLocation(lat, lng, zoom = 15) {
   }
 }
 
-function initProfileMap(savedLat = null, savedLng = null) {
-  if (!profileMapElement || typeof L === "undefined") return;
+function initProfileGoogleMap() {
+  if (!profileMapElement || typeof google === "undefined") return;
 
-  const defaultLat = savedLat || 23.8103;
-  const defaultLng = savedLng || 90.4125;
+  const defaultLat = pendingSavedLat || 23.8103;
+  const defaultLng = pendingSavedLng || 90.4125;
 
-  profileMap = L.map("profileMap").setView([defaultLat, defaultLng], 12);
-
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution: "&copy; OpenStreetMap contributors",
-  }).addTo(profileMap);
-
-  if (savedLat && savedLng) {
-    setProfileMapLocation(savedLat, savedLng, 15);
-  }
-
-  profileMap.on("click", (e) => {
-    setProfileMapLocation(e.latlng.lat, e.latlng.lng, 15);
+  profileMap = new google.maps.Map(profileMapElement, {
+    center: { lat: Number(defaultLat), lng: Number(defaultLng) },
+    zoom: pendingSavedLat && pendingSavedLng ? 15 : 12,
+    mapTypeControl: false,
+    streetViewControl: false,
+    fullscreenControl: true,
+    zoomControl: true,
   });
 
-  setTimeout(() => {
-    profileMap.invalidateSize();
-  }, 300);
+  profileMap.addListener("click", (event) => {
+    setProfileMapLocation(event.latLng.lat(), event.latLng.lng(), 15);
+  });
+
+  if (pendingSavedLat && pendingSavedLng) {
+    setProfileMapLocation(pendingSavedLat, pendingSavedLng, 15);
+  }
 }
+
+window.initProfileGoogleMap = initProfileGoogleMap;
 
 if (useCurrentLocationBtn) {
   useCurrentLocationBtn.addEventListener("click", () => {
@@ -222,6 +228,9 @@ async function loadProfile() {
     if (latitudeInput) latitudeInput.value = freshUser.latitude || "";
     if (longitudeInput) longitudeInput.value = freshUser.longitude || "";
 
+    pendingSavedLat = freshUser.latitude ? Number(freshUser.latitude) : null;
+    pendingSavedLng = freshUser.longitude ? Number(freshUser.longitude) : null;
+
     previewImage.src =
       freshUser.profileImage || "https://via.placeholder.com/160";
     previewName.textContent = freshUser.name || "Unknown User";
@@ -229,8 +238,8 @@ async function loadProfile() {
     previewRole.textContent = freshUser.role || "receiver";
     previewDonorStatus.textContent = freshUser.donorStatus || "none";
 
-    if (!profileMap) {
-      initProfileMap(freshUser.latitude, freshUser.longitude);
+    if (profileMap && pendingSavedLat && pendingSavedLng) {
+      setProfileMapLocation(pendingSavedLat, pendingSavedLng, 15);
     }
   } catch (error) {
     console.error("Profile load error:", error);

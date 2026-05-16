@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const FoodRequest = require("../models/FoodRequest");
 
-// Create food request
+
 router.post("/create", async (req, res) => {
   try {
     const {
@@ -63,7 +63,7 @@ router.post("/create", async (req, res) => {
   }
 });
 
-// Get requests made by current user
+
 router.get("/my-requests/:userId", async (req, res) => {
   try {
     const requests = await FoodRequest.find({ requester: req.params.userId })
@@ -77,7 +77,7 @@ router.get("/my-requests/:userId", async (req, res) => {
   }
 });
 
-// Get requests received by donor
+
 router.get("/donor-requests/:donorId", async (req, res) => {
   try {
     const requests = await FoodRequest.find({ donor: req.params.donorId })
@@ -91,8 +91,7 @@ router.get("/donor-requests/:donorId", async (req, res) => {
   }
 });
 
-// Accept food request
-// Accept food request
+
 router.put("/accept/:id", async (req, res) => {
   try {
     const request = await FoodRequest.findById(req.params.id);
@@ -142,8 +141,7 @@ router.put("/accept/:id", async (req, res) => {
   }
 });
 
-// Reject food request
-// Reject food request
+
 router.put("/reject/:id", async (req, res) => {
   try {
     const request = await FoodRequest.findByIdAndUpdate(

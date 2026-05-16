@@ -7,13 +7,6 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    />
-
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
     <script>
       tailwind.config = {
         theme: {
@@ -36,8 +29,17 @@
       };
     </script>
 
+    <style>
+      #pickupMap {
+        height: 320px;
+        width: 100%;
+      }
+    </style>
+
     <link rel="stylesheet" href="css/style.css" />
   </head>
+
+  
 
   <body class="min-h-screen bg-slate-50 text-slate-800">
     <header
@@ -311,5 +313,10 @@
     </main>
 
     <script src="js/addFood.js"></script>
+    <script
+    async
+    defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhZRCUDr97eGLzlw66fH7DE7KuljFx1Sg&callback=initPickupGoogleMap&loading=async"
+  ></script>
   </body>
 </html>

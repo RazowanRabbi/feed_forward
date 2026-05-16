@@ -7,13 +7,6 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    />
-
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
     <script>
       tailwind.config = {
         theme: {
@@ -37,19 +30,20 @@
     </script>
 
     <link rel="stylesheet" href="css/style.css" />
+
+    <style>
+      #profileMap {
+        height: 320px;
+        width: 100%;
+      }
+    </style>
   </head>
 
   <body class="min-h-screen bg-slate-50 text-slate-800">
-    <header
-      class="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur"
-    >
-      <div
-        class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4"
-      >
+    <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur">
+      <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <a href="feed.html" class="flex items-center gap-3">
-          <div
-            class="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-600 text-lg font-bold text-white shadow-soft"
-          >
+          <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-600 text-lg font-bold text-white shadow-soft">
             F
           </div>
           <div>
@@ -58,170 +52,78 @@
           </div>
         </a>
 
-        <a
-          href="feed.html"
-          class="rounded-2xl bg-slate-900 px-5 py-2 text-sm font-semibold text-white transition hover:bg-brand-700"
-        >
+        <a href="feed.html" class="rounded-2xl bg-slate-900 px-5 py-2 text-sm font-semibold text-white transition hover:bg-brand-700">
           Back to Feed
         </a>
       </div>
     </header>
 
-    <main
-      class="mx-auto grid max-w-6xl gap-8 px-6 py-10 lg:grid-cols-[360px_1fr]"
-    >
-      <aside
-        class="rounded-[28px] border border-slate-200 bg-white p-7 shadow-soft"
-      >
+    <main class="mx-auto grid max-w-6xl gap-8 px-6 py-10 lg:grid-cols-[360px_1fr]">
+      <aside class="rounded-[28px] border border-slate-200 bg-white p-7 shadow-soft">
         <div class="text-center">
-          <img
-            id="previewImage"
-            src="https://via.placeholder.com/160"
-            class="mx-auto h-36 w-36 rounded-full border border-slate-200 object-cover shadow-soft"
-            alt="Profile preview"
-          />
+          <img id="previewImage" src="https://via.placeholder.com/160" class="mx-auto h-36 w-36 rounded-full border border-slate-200 object-cover shadow-soft" alt="Profile preview" />
 
-          <h2 id="previewName" class="mt-5 text-2xl font-bold text-slate-900">
-            Loading...
-          </h2>
-
+          <h2 id="previewName" class="mt-5 text-2xl font-bold text-slate-900">Loading...</h2>
           <p id="previewEmail" class="mt-1 text-sm text-slate-500"></p>
 
-          <div
-            class="mt-5 rounded-2xl bg-brand-50 p-4 text-left text-sm text-brand-900"
-          >
-            <p>
-              <span class="font-semibold">Role:</span>
-              <span id="previewRole"></span>
-            </p>
-            <p class="mt-1">
-              <span class="font-semibold">Donor Status:</span>
-              <span id="previewDonorStatus"></span>
-            </p>
+          <div class="mt-5 rounded-2xl bg-brand-50 p-4 text-left text-sm text-brand-900">
+            <p><span class="font-semibold">Role:</span> <span id="previewRole"></span></p>
+            <p class="mt-1"><span class="font-semibold">Donor Status:</span> <span id="previewDonorStatus"></span></p>
           </div>
         </div>
       </aside>
 
-      <section
-        class="rounded-[28px] border border-slate-200 bg-white p-8 shadow-soft"
-      >
-        <span
-          class="inline-flex rounded-full border border-brand-200 bg-brand-50 px-4 py-2 text-sm font-semibold text-brand-700"
-        >
+      <section class="rounded-[28px] border border-slate-200 bg-white p-8 shadow-soft">
+        <span class="inline-flex rounded-full border border-brand-200 bg-brand-50 px-4 py-2 text-sm font-semibold text-brand-700">
           Account Settings
         </span>
 
-        <h1 class="mt-4 text-3xl font-bold tracking-tight text-slate-900">
-          Edit Profile
-        </h1>
+        <h1 class="mt-4 text-3xl font-bold tracking-tight text-slate-900">Edit Profile</h1>
 
         <p class="mt-2 text-sm leading-6 text-slate-600">
-          Update your public profile information. This information will appear
-          in your FeedForward sidebar and related activity pages.
+          Update your public profile information. This information will appear in your FeedForward sidebar and related activity pages.
         </p>
 
         <form id="profileForm" class="mt-8 space-y-5">
           <div>
-            <label
-              for="name"
-              class="mb-2 block text-sm font-semibold text-slate-700"
-            >
-              Full Name
-            </label>
-            <input
-              id="name"
-              type="text"
-              class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
-              required
-            />
+            <label for="name" class="mb-2 block text-sm font-semibold text-slate-700">Full Name</label>
+            <input id="name" type="text" class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100" required />
           </div>
 
           <div>
-            <label
-              for="email"
-              class="mb-2 block text-sm font-semibold text-slate-700"
-            >
-              Email Address
-            </label>
-            <input
-              id="email"
-              type="email"
-              disabled
-              class="w-full cursor-not-allowed rounded-2xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm text-slate-500"
-            />
-            <p class="mt-2 text-xs text-slate-500">
-              Email cannot be changed from this page.
-            </p>
+            <label for="email" class="mb-2 block text-sm font-semibold text-slate-700">Email Address</label>
+            <input id="email" type="email" disabled class="w-full cursor-not-allowed rounded-2xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm text-slate-500" />
+            <p class="mt-2 text-xs text-slate-500">Email cannot be changed from this page.</p>
           </div>
 
           <div class="grid gap-5 sm:grid-cols-2">
             <div>
-              <label
-                for="phone"
-                class="mb-2 block text-sm font-semibold text-slate-700"
-              >
-                Phone Number
-              </label>
-              <input
-                id="phone"
-                type="text"
-                class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
-              />
+              <label for="phone" class="mb-2 block text-sm font-semibold text-slate-700">Phone Number</label>
+              <input id="phone" type="text" class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100" />
             </div>
 
             <div>
-              <label
-                for="location"
-                class="mb-2 block text-sm font-semibold text-slate-700"
-              >
-                Location
-              </label>
-              <input
-                id="location"
-                type="text"
-                class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
-              />
+              <label for="location" class="mb-2 block text-sm font-semibold text-slate-700">Location</label>
+              <input id="location" type="text" class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100" />
             </div>
           </div>
 
           <div>
-            <label
-              for="bio"
-              class="mb-2 block text-sm font-semibold text-slate-700"
-            >
-              Short Bio
-            </label>
-            <textarea
-              id="bio"
-              rows="4"
-              placeholder="Tell others a little about you or your organization..."
-              class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
-            ></textarea>
+            <label for="bio" class="mb-2 block text-sm font-semibold text-slate-700">Short Bio</label>
+            <textarea id="bio" rows="4" placeholder="Tell others a little about you or your organization..." class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100"></textarea>
           </div>
 
           <div>
-            <label class="mb-2 block text-sm font-semibold text-slate-700">
-              Map Location
-            </label>
+            <label class="mb-2 block text-sm font-semibold text-slate-700">Map Location</label>
 
-            <div
-              id="profileMap"
-              class="h-80 w-full rounded-2xl border border-slate-300"
-            ></div>
+            <div id="profileMap" class="rounded-2xl border border-slate-300"></div>
 
             <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <button
-                type="button"
-                id="useCurrentLocationBtn"
-                class="rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-700"
-              >
+              <button type="button" id="useCurrentLocationBtn" class="rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-700">
                 Use Current Location
               </button>
 
-              <p
-                id="mapLocationStatus"
-                class="text-sm font-medium text-slate-500"
-              >
+              <p id="mapLocationStatus" class="text-sm font-medium text-slate-500">
                 Click on the map or use your current location.
               </p>
             </div>
@@ -231,30 +133,14 @@
           </div>
 
           <div>
-            <label
-              for="profileImage"
-              class="mb-2 block text-sm font-semibold text-slate-700"
-            >
-              Upload Profile Picture
-            </label>
-
-            <input
-              id="profileImage"
-              type="file"
-              accept="image/*"
-              class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100"
-            />
-
+            <label for="profileImage" class="mb-2 block text-sm font-semibold text-slate-700">Upload Profile Picture</label>
+            <input id="profileImage" type="file" accept="image/*" class="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100" />
             <p class="mt-2 text-xs text-slate-500">
-              Upload a clear profile picture. If you do not choose a new image,
-              your current image will stay unchanged.
+              Upload a clear profile picture. If you do not choose a new image, your current image will stay unchanged.
             </p>
           </div>
 
-          <button
-            type="submit"
-            class="w-full rounded-2xl bg-brand-600 px-6 py-3 text-sm font-semibold text-white shadow-soft transition hover:bg-brand-700"
-          >
+          <button type="submit" class="w-full rounded-2xl bg-brand-600 px-6 py-3 text-sm font-semibold text-white shadow-soft transition hover:bg-brand-700">
             Save Changes
           </button>
         </form>
@@ -262,5 +148,6 @@
     </main>
 
     <script src="js/profile.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhZRCUDr97eGLzlw66fH7DE7KuljFx1Sg&callback=initProfileGoogleMap&loading=async"></script>
   </body>
 </html>
