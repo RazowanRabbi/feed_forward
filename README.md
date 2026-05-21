@@ -212,7 +212,7 @@ http://localhost:5000
 
 # 👨‍💻 Developer
 
-**Razowan**
+**Razowan** |
 Bangladesh University of Professionals (BUP)
 
 ---
